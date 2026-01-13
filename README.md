@@ -28,7 +28,7 @@
 ### Frontend
    - Figma para prototipado
    - React
-   - Module CSS
+   - TailwindCSS
 
 #### Librerias
 
