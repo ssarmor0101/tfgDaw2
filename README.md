@@ -49,5 +49,7 @@
 
 ## Bibliografía
 
+- https://tailwindcss.com/docs
+
 ## Autor
 **Sergio Sarmiento Moreno**
