@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use Database\Factories\JuegoFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Juego extends Model
 {
+    use HasFactory;
+
+    protected static function newFactory()
+    {
+        return JuegoFactory::new();
+    }
+
     protected $table = 'juegos';
 
     protected $fillable = [

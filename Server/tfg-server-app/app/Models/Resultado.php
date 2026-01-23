@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use Database\Factories\ResultadoFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Resultado extends Model
 {
+    use HasFactory;
+
+    protected static function newFactory()
+    {
+        return ResultadoFactory::new();
+    }
+
     protected $table = 'resultados';
 
     protected $fillable = [

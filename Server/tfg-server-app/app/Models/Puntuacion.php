@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use Database\Factories\PuntuacionFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Puntuacion extends Model
 {
+    use HasFactory;
+
+    protected static function newFactory()
+    {
+        return PuntuacionFactory::new();
+    }
+
     protected $table = 'puntuaciones';
 
     protected $fillable = [

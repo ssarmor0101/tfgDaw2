@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Juego;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Juego>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Logro>
  */
-class JuegoFactory extends Factory
+class LogroFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +18,8 @@ class JuegoFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => fake()->unique()->sentence(1),
+            "juego_id" => Juego::inRandomOrder()->first()->id,
+            "name" => fake()->sentence(1),
             "description" => fake()->sentence()
         ];
     }

@@ -17,9 +17,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        $this->call([
+            RolSeeder::class,
+            UserSeeder::class
         ]);
+
+        if (app()->environment('local')) {
+            // Sólo se ejecutan estos seeders en el entorno local (desarrollo)
+            $this->call([
+                JuegoSeeder::class,
+                LogroSeeder::class,
+                ResultadoSeeder::class,
+                PuntuacionSeeder::class,
+                AmigoSeeder::class
+            ]);
+        }
     }
 }

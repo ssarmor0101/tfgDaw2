@@ -2,18 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Rol;
+use App\Models\Resultado;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class RolSeeder extends Seeder
+class ResultadoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Rol::firstOrCreate(['slug' => 'admin', 'name' => 'Administrador']);
-        Rol::firstOrCreate(['slug' => 'user', 'name' => 'Usuario']);
+        Resultado::factory()->count(30)->create();
     }
 }

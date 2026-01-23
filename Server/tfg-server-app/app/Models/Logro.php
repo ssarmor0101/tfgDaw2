@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use Database\Factories\LogroFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Logro extends Model
 {
+    use HasFactory;
+
+    protected static function newFactory()
+    {
+        return LogroFactory::new();
+    }
+
     protected $table = 'logros';
 
     protected $fillable = [
