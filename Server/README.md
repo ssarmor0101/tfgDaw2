@@ -35,10 +35,10 @@ Dispondremos de tres contenedores (web, db y phpmyadmin) y un fichero de configu
 #### 1.1.1.7. Comprobar que composer funciona correctamente en el contenedor web:
         composer -v
 #### 1.1.1.8. Crear el proyecto/solución Laravel dentro del contenedor web:
-        composer create-project laravel/laravel gestor-tareas
+        composer create-project laravel/laravel tfg-server-app
 #### 1.1.1.9. Comprobar el correcto funcionamiento del entorno:
         http://localhost:8081
-        http://localhost:8080/gestor-tareas/public/index.php
+        http://localhost:8080/tfg-server-app/public/index.php
 
 ### 1.1.2. Restauración del entorno
 

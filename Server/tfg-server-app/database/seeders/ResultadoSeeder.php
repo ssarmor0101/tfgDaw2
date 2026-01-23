@@ -13,6 +13,6 @@ class ResultadoSeeder extends Seeder
      */
     public function run(): void
     {
-        Resultado::factory()->count(30)->create();
+        Resultado::factory()->count(5)->create();
     }
 }

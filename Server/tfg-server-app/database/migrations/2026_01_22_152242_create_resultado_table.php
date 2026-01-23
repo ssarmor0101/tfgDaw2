@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('resultados', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->unique();
-            $table->foreignId('logro_id')->constrained('logros')->unique();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('logro_id')->constrained('logros');
+            $table->unique(["user_id", "logro_id"]);
             $table->timestamps();
         });
     }

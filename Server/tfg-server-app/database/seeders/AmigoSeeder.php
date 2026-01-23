@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use function Symfony\Component\Clock\now;
+
 class AmigoSeeder extends Seeder
 {
     /**
@@ -44,6 +46,8 @@ class AmigoSeeder extends Seeder
                 $pares[] = [
                     'user_id' => $users[$i],
                     'friend_id' => $users[$j],
+                    'created_at' => now(),
+                    'updated_at' => now()
                 ];
             }
         }
