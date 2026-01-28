@@ -1,13 +1,13 @@
 @extends('layout')
 
 @section('content')
-    <h1>Editar Juego</h1>
-    <form action="{{ route('juegos.update', $juego) }}" method="POST">
+    <h1>Editar Usuario</h1>
+    <form action="{{ route('users.update', $user) }}" method="POST">
         @csrf
         @method('PUT')
 
         <label>Nombre</label>
-        <input type="text" name="name" value="{{ $juego->name }}"/>
+        <input type="text" name="name" value="{{ $user->name }}"/>
 
         @error('name')
             <div class="error">{{ $message }}</div>
@@ -16,7 +16,7 @@
         <br/><br/>
 
         <label>Descripcion</label>
-        <input type="text" name="description" value="{{ $juego->description }}"/>
+        <input type="text" name="description" value="{{ $user->description }}"/>
 
         @error('description')
             <div class="error">{{ $message }}</div>
@@ -30,5 +30,5 @@
 
     </form>
 
-    <a href="{{ route('juegos.index') }}">Volver</a>
+    <a href="{{ route('users.index') }}">Volver</a>
 @endsection

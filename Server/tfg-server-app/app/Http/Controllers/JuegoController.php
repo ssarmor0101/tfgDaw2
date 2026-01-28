@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreJuegoRequest;
+use App\Http\Requests\UpdateJuegoRequest;
 use App\Models\Juego;
 use Illuminate\Http\Request;
 
@@ -28,9 +30,13 @@ class JuegoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreJuegoRequest $request)
     {
-        //
+        $validate = $request->validated();
+
+        Juego::create($validate);
+
+        return redirect(route('juegos.index'));
     }
 
     /**
@@ -52,9 +58,13 @@ class JuegoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Juego $juego)
+    public function update(UpdateJuegoRequest $request, Juego $juego)
     {
-        //
+        $validate = $request->validated();
+
+        $juego->update($validate);
+
+        return redirect(route('juegos.index'));
     }
 
     /**
@@ -62,7 +72,15 @@ class JuegoController extends Controller
      */
     public function destroy(Juego $juego)
     {
+        // Juego::onlyTrashed()->get();
+
+
         $juego->delete();
+        return redirect(route('juegos.index'));
+    }
+
+    public function restore(Juego $juego) {
+        $juego->restore();
         return redirect(route('juegos.index'));
     }
 }

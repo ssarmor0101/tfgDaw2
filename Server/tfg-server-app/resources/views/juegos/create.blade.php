@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juegos</title>
-</head>
-<body>
+@extends('layout')
+
+@section('content')
     <h1>Crear Juego</h1>
     <form action="{{ route('juegos.store') }}" method="POST">
         @csrf
 
         <label>Nombre</label>
-        <input type="text" name="name"/>
+        <input type="text" name="name" value="{{ old('name') }}"/>
 
         @error('name')
             <div class="error">{{ $message }}</div>
@@ -20,7 +15,7 @@
         <br/><br/>
 
         <label>Descripcion</label>
-        <input type="text" name="description"/>
+        <input type="text" name="description" value="{{ old('description') }}"/>
 
         @error('description')
             <div class="error">{{ $message }}</div>
@@ -35,5 +30,4 @@
     </form>
 
     <a href="{{ route('juegos.index') }}">Volver</a>
-</body>
-</html>
+@endsection
