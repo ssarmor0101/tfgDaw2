@@ -5,10 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreJuegoRequest;
 use App\Http\Requests\UpdateJuegoRequest;
 use App\Models\Juego;
+use App\Services\JuegoService;
 use Illuminate\Http\Request;
 
 class JuegoController extends Controller
 {
+    protected $juegoService;
+
+    public function __construct(JuegoService $juegoService)
+    {
+        $this->juegoService = $juegoService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -34,7 +42,8 @@ class JuegoController extends Controller
     {
         $validate = $request->validated();
 
-        Juego::create($validate);
+        // Juego::create($validate);
+        $this->juegoService->storeJuego($validate);
 
         return redirect(route('juegos.index'));
     }

@@ -24,7 +24,7 @@ class StoreUserRequest extends FormRequest
         // $this->input()
         return [
             'name' => 'required|string|max:50',
-            'email' => 'required|email:rfc:dns|max:100|unique:users,email,',
+            'email' => 'required|email:rfc:filter_unicode|max:100|unique:users,email',
             'password' => 'required|string|min:4|confirmed',
             'rol_id' => 'required|exists:roles,id',
         ];

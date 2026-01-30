@@ -24,9 +24,19 @@
 
         <br/><br/>
 
+        <label>Actualizar contraseña</label>
+        <input type="checkbox" name="use_password" value="1"/>
+
+        <br/><br/>
+
         @if(true)
         <label>Password</label>
         <input type="password" name="password"/>
+
+        <br/><br/>
+
+        <label>Confirm Password</label>
+        <input type="password" name="password_confirmation"/>
 
         @error('password')
             <div class="error">{{ $message }}</div>
