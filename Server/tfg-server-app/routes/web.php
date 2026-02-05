@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JuegoController;
 use App\Http\Controllers\LogroController;
+use App\Http\Controllers\ResultadoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
         'juegos' => JuegoController::class,
         'users' => UserController::class,
         'logros' => LogroController::class,
+        'resultados' => ResultadoController::class,
     ]);
 
 });

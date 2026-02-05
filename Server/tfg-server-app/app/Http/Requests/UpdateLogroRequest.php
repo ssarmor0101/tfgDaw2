@@ -11,7 +11,7 @@ class UpdateLogroRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateLogroRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'juego_id' => 'required|exists:juegos,id',
+            'name' => 'required|string|max:50',
+            'description' => 'required|string|max:250'
         ];
     }
 }

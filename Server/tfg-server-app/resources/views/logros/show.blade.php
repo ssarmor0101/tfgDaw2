@@ -14,20 +14,11 @@
     <br/><br/>
 
     <label>Nombre</label>
-    <input type="text" name="name" value="{{ old('name', $logro->name) }}"/>
-
-    @error('name')
-        <div class="error">{{ $message }}</div>
-    @enderror
-
+    <input type="text" name="name" value="{{ old('name', $logro->name) }}" disabled/>
     <br/><br/>
 
     <label>Descripcion</label>
-    <input type="text" name="description" value="{{ old('description', $logro->description) }}"/>
-
-    @error('email')
-        <div class="error">{{ $message }}</div>
-    @enderror
+    <input type="text" name="description" value="{{ old('description', $logro->description) }}" disabled/>
 
     <br/><br/>
 

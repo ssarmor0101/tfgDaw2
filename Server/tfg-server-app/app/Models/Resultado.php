@@ -18,11 +18,11 @@ class Resultado extends Model
     protected $table = 'resultados';
 
     protected $fillable = [
-        'usuario',
-        'logro'
+        'user_id',
+        'logro_id'
     ];
 
-    public function usuario() {
+    public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }
 

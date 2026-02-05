@@ -16,5 +16,5 @@
         @endforeach
     </ul>
 @else
-    <p>No hay usuarios</p>
+    <p>No hay logros</p>
 @endif

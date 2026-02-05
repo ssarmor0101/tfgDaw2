@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreLogroRequest extends FormRequest
+class StoreResultadoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +23,13 @@ class StoreLogroRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'juego_id' => 'required|integer|exists:juegos,id',
-            'name' => 'required|string|max:50|filled',
-            'description' => 'required|string|max:250|filled',
+            'user_id' => [
+                'required',
+                'integer',
+                'exists:users,id',
+                Rule::unique('user_logros')->where('logro_id', $this->logro_id),
+            ],
+            'logro_id' => 'required|integer|exists:logros,id',
         ];
     }
 }

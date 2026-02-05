@@ -18,7 +18,7 @@ class Logro extends Model
     protected $table = 'logros';
 
     protected $fillable = [
-        'juego',
+        'juego_id',
         'name',
         'description'
     ];
