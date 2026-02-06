@@ -29,6 +29,7 @@
    - Figma para prototipado
    - React
    - TailwindCSS
+   - shadcn
 
 #### Librerias
 
