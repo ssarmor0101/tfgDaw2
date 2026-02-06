@@ -15,7 +15,7 @@ class LogroController extends Controller
      */
     public function index()
     {
-        $logros = Logro::all();
+        $logros = Logro::all()->sortByDesc('updated_at');
         return view('logros.index', compact('logros'));
     }
 

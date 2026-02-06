@@ -18,12 +18,16 @@ class Puntuacion extends Model
     protected $table = 'puntuaciones';
 
     protected $fillable = [
-        'user',
-        'juego',
+        'user_id',
+        'juego_id',
         'puntuacion'
     ];
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function juego() {
+        return $this->belongsTo(Juego::class, 'juego_id');
     }
 }

@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreResultadoRequest extends FormRequest
+class StorePuntuacionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +22,9 @@ class StoreResultadoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => [
-                'required',
-                'integer',
-                'exists:users,id',
-                Rule::unique('resultados')->where('logro_id', $this->logro_id),
-            ],
-            'logro_id' => 'required|integer|exists:logros,id',
+            'user_id' => 'required|integer|exists:users,id',
+            'juego_id' => 'required|integer|exists:juegos,id',
+            'puntuacion' => 'required|integer|min:0',
         ];
     }
 }

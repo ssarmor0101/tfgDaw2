@@ -22,7 +22,7 @@ class JuegoController extends Controller
      */
     public function index()
     {
-        $juegos = Juego::all();
+        $juegos = Juego::all()->sortByDesc('updated_at');
 
         return view('juegos.index', compact('juegos'));
     }

@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\AmigoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JuegoController;
 use App\Http\Controllers\LogroController;
+use App\Http\Controllers\PuntuacionController;
 use App\Http\Controllers\ResultadoController;
 use App\Http\Controllers\UserController;
+use App\Models\Puntuacion;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -30,6 +33,10 @@ Route::middleware('auth')->group(function () {
         'users' => UserController::class,
         'logros' => LogroController::class,
         'resultados' => ResultadoController::class,
+        // 'puntuaciones' => PuntuacionController::class,
+        'amigos' => AmigoController::class,
     ]);
+
+    Route::resource('puntuaciones', PuntuacionController::class)->parameters(['puntuaciones' => 'puntuacion']);
 
 });

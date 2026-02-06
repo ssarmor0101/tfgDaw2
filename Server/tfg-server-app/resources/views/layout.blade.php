@@ -12,6 +12,8 @@
             <a href="{{ route('juegos.index') }}">Juegos</a>
             <a href="{{ route('logros.index') }}">Logros</a>
             <a href="{{ route('resultados.index') }}">Resultados</a>
+            <a href="{{ route('puntuaciones.index') }}">Puntuaciones</a>
+            <a href="{{ route('amigos.index') }}">Amigos</a>
             <a href="{{ route('users.index') }}">Usuarios</a>
         </nav>
         <a href="{{ route('logout') }}">Logout</a>

@@ -16,7 +16,7 @@ class ResultadoController extends Controller
      */
     public function index()
     {
-        $resultados = Resultado::all();
+        $resultados = Resultado::all()->sortByDesc('updated_at');
         return view('resultados.index', compact('resultados'));
     }
 
