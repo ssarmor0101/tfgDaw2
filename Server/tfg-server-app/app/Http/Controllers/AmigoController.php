@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Amigo;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\StoreAmigoRequest;
 use App\Http\Requests\UpdateAmigoRequest;
@@ -40,24 +39,22 @@ class AmigoController extends Controller
             [$data['user_id'], $data['friend_id']] = [$data['friend_id'], $data['user_id']];
         }
         Amigo::create($data);
-        return redirect()->route('amigos.index')->with('success', 'Amistad creada.');
+        return redirect()->route('amigos.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Amigo $amigo)
     {
-        $amigo = Amigo::with(['user','friend'])->findOrFail($id);
         return view('amigos.show', compact('amigo'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Amigo $amigo)
     {
-        $amigo = Amigo::findOrFail($id);
         $users = User::orderBy('name')->get();
         return view('amigos.edit', compact('amigo','users'));
     }
@@ -65,25 +62,23 @@ class AmigoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAmigoRequest $request, string $id)
+    public function update(UpdateAmigoRequest $request, Amigo $amigo)
     {
         /** @var \App\Http\Requests\UpdateAmigoRequest $request */
-        $amigo = Amigo::findOrFail($id);
         $data = $request->validated();
         if ($data['user_id'] > $data['friend_id']) {
             [$data['user_id'], $data['friend_id']] = [$data['friend_id'], $data['user_id']];
         }
         $amigo->update($data);
-        return redirect()->route('amigos.index')->with('success', 'Amistad actualizada.');
+        return redirect()->route('amigos.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Amigo $amigo)
     {
-        $amigo = Amigo::findOrFail($id);
         $amigo->delete();
-        return redirect()->route('amigos.index')->with('success', 'Amistad eliminada.');
+        return redirect()->route('amigos.index');
     }
 }
