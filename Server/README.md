@@ -35,10 +35,10 @@ Dispondremos de tres contenedores (web, db y phpmyadmin) y un fichero de configu
 #### 1.1.1.7. Comprobar que composer funciona correctamente en el contenedor web:
         composer -v
 #### 1.1.1.8. Crear el proyecto/solución Laravel dentro del contenedor web:
-        composer create-project laravel/laravel tfg-server-app
+        composer create-project laravel/laravel gestor-tareas
 #### 1.1.1.9. Comprobar el correcto funcionamiento del entorno:
         http://localhost:8081
-        http://localhost:8080/tfg-server-app/public/index.php
+        http://localhost:8080/gestor-tareas/public/index.php
 
 ### 1.1.2. Restauración del entorno
 
@@ -419,7 +419,7 @@ Otro buen ejemplo es el controlador para autenticación (lo veremos más adelant
 Una ruta no es más que un punto de entrada a nuestra aplicación. Más concretamente, es la "dirección" de alguno de los métodos de algún
 controlador. Por tanto, cada método de cada controlador debe estar enrutado correctamente para que pueda ser accesible.
 
-El objetivo es que si escribimos en el navegador http://localhost/proyectos aparezca una tabla con todos los proyectos.
+El objetivo es que si escribimos en el navegador http://XXX/proyectos aparezca una tabla con todos los proyectos.
 Para eso necesitamos tres piezas:
 * Ruta → conecta la URL con el método correspondiente del controlador.
 * Controlador → implementa la lógica de la operación, obtiene los datos e indica cuál es la vista que tiene que mostrarse.
@@ -617,5 +617,234 @@ negativo redirige al formulario de inicio de sesión.
                 }
         }
 
-El código anterior consigue que durante la construcción del controlador se verifica si el usuario está autenticado. En caso negativo redirige 
-al formulario de inicio de sesión. Funcionalmente es totalmente equivalente al anterior, 
+El código anterior consigue que durante la construcción del controlador se verifica si el usuario está autenticado. En caso negativo redirige al formulario de inicio de sesión. Funcionalmente es totalmente equivalente al anterior, 
+
+# 8. VALIDACIONES
+
+Una de las cuestiones más importantes en el desarrollo de una aplicación web son las reglas de validación. Estas reglas van desde
+las más simples (tamaño de un campo, si es o no requerido...) a otras más complejas que involucran lógica de negocio (qué rol de usuario
+puede realizar qué tareas, validaciones que involucran a varios campos...).
+
+## 8.1. Validaciones individuales de campos
+
+Este tipo de validaciones suelen ser un espejo tanto de la configuración de los campos en la base de datos como de los formularios en los que el usuario introduce los datos: tipo, tamaño, si es requerido, si admite nulos, etc.
+
+Si son muy simples a vces se incluyen en el propio controlador de la operación, pero no es buena práctica. *Laravel* nos proporciona un elemento específico para realizar este tipo validaciones, los llamados *FormRequests*. Como su propio nombre indica, se trata de validar
+los datos provenientes de un formulario (vista) a través de la petición (request).
+
+Se crean ejecutando el siguiente comando:
+
+       php artisan make:request StoreTareaRequest
+
+Se creará el fichero en app/Http/Requests/StoreTareaRequest.php.
+Rule::unique()
+Rule::exists()
+Rule::in()
+Rule::requiredIf()
+
+Validaciones dependientes
+
+
+
+Utilizar Rule:: en validaciones algo más complejas
+
+
+
+COMPLETAR
+
+
+
+
+REVISAR INICIO
+
+
+1) ¿Dónde validar? — Opciones y cuándo usar cada una
+
+Validación inline en el controlador ($request->validate([...]))
+        Rápido para reglas simples y prototipos.
+        Fácil, pero ensucia el controlador si las reglas crecen.
+
+FormRequest (recomendado) (php artisan make:request TaskRequest)
+        Clase dedicada: rules(), authorize(), messages() y attributes().
+        Limpia controladores y permite reutilizar reglas.
+        Permite lógica de autorización ligada a la validación (authorize()).
+
+Validadores manuales (Validator::make(...))
+        Útil para validaciones condicionales complejas o si quieres ejecutar la validación y decidir tú qué hacer.
+
+Validación a nivel de modelo (no nativa en Eloquent)
+        Mejor dejarla a FormRequest; en modelos puedes usar mutators, casts y events.
+
+REVISAR FIN
+
+
+
+
+
+
+RULES
+
+Puedes usar un Rule::exists()->where(...):
+
+use Illuminate\Validation\Rule;
+
+'proyecto_id' => [
+    'required',
+    Rule::exists('proyectos', 'id')->where(function ($query) use ($userId) {
+        $query->where('user_id', $userId);
+    }),
+],
+
+
+O crear una regla personalizada con php artisan make:rule ProyectoPerteneceUsuario.
+
+
+
+
+
+
+
+7) Lógica de negocio: ¿dónde ponerla?
+
+Validaciones y autorizaciones simples → FormRequest (authorize()) y Policy.
+
+Reglas complejas de negocio (ej. si cambio de estado, notificar, generar audit trail, actualizar otras tablas) → Service classes o Domain Services.
+
+Ejemplo de Service:
+
+app/Services/TaskService.php
+
+class TaskService
+{
+    public function changeStatus(Task $task, string $newStatus, User $actor)
+    {
+        // reglas de negocio
+        if ($task->estado === 'completada' && $newStatus !== 'completada') {
+            throw new \Exception('No se puede reabrir una tarea completada.');
+        }
+
+        // transaction si hay múltiples operaciones
+        \DB::transaction(function () use ($task, $newStatus, $actor) {
+            $task->estado = $newStatus;
+            $task->save();
+
+            // p.ej. crear registro en audit_log
+            // Audit::create([...])
+        });
+    }
+}
+
+
+Y lo usas en el controlador:
+
+public function update(UpdateTaskRequest $request, Task $tarea, TaskService $service)
+{
+    $data = $request->validated();
+
+    if (isset($data['estado'])) {
+        $service->changeStatus($tarea, $data['estado'], auth()->user());
+        // si el servicio lanza excepción, capturar y manejar
+    } else {
+        $tarea->update($data);
+    }
+
+    return back();
+}
+
+
+Ventaja: controlador queda fino y legible; la lógica compleja vive en una clase dedicada y testeable.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8) Políticas (Policies) para autorización por tarea
+
+Crear policy:
+
+php artisan make:policy TaskPolicy --model=Task
+
+
+En TaskPolicy:
+
+public function update(User $user, Task $task)
+{
+    // p.ej. solo puede editar si es el propietario o es admin
+    return $user->id === $task->usuario_id || $user->rol === 'admin';
+}
+
+
+Registrar policy en AuthServiceProvider (si no se registra automáticamente):
+
+protected $policies = [
+    Task::class => TaskPolicy::class,
+];
+
+
+Usarlo en controlador:
+
+$this->authorize('update', $tarea);
+
+
+O en vistas blade:
+
+@can('update', $tarea)
+    <a href="{{ route('tareas.edit', $tarea) }}">Editar</a>
+@endcan
+
+9) Transacciones y consistencia
+
+Si una operación implica varias escrituras (p.ej. actualizar tarea + notificar + actualizar contador), envuélvelas en DB::transaction() para asegurar consistencia.
+
+\DB::transaction(function () use ($tarea, $data) {
+    $tarea->update($data);
+    // otras operaciones
+});
+
+
+
+
+
+Sí, estás totalmente en lo cierto 👍
+Resumen breve y claro:
+
+✅ Middleware de rol
+Útil solo para:
+
+permitir o bloquear el acceso a una ruta/controlador según el rol
+
+ej.: “solo admins pueden entrar aquí”
+
+❌ No es buena solución cuando:
+
+el mismo controlador debe comportarse distinto según el rol
+
+ej.: admin ve todo, usuario ve solo lo suyo
+
+En esos casos, lo correcto es:
+
+lógica en el controlador
+
+policies para autorizar acciones
+
+o métodos del modelo (isAdmin(), etc.)
+
+👉 Regla mental:
+
+Middleware = acceso
+Policy / lógica = comportamiento

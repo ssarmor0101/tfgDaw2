@@ -32,4 +32,9 @@ class Juego extends Model
     public function puntuaciones() {
         return $this->hasMany(Puntuacion::class, 'juego_id');
     }
+
+    public function mejorPuntuacion() {
+        $puntuaciones = $this->puntuaciones();
+        return $puntuaciones->sortByDesc('puntuacion')->first();
+    }
 }

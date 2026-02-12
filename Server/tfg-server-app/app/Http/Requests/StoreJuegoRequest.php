@@ -11,7 +11,9 @@ class StoreJuegoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // return $this->user()->isAdmin();
+
+        return $this->user()->can('create');
     }
 
     /**

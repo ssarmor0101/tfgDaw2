@@ -68,6 +68,7 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role->slug === RolSlug::ADMIN;
+        $rolAdmin = Rol::where('slug', RolSlug::ADMIN)->first();
+        return $this->rol_id === $rolAdmin->id;
     }
 }

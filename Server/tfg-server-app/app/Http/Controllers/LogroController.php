@@ -75,6 +75,7 @@ class LogroController extends Controller
      */
     public function destroy(Logro $logro)
     {
+        $this->authorize('delete', $logro);
         $logro->delete();
         return redirect(route('logros.index'));
     }

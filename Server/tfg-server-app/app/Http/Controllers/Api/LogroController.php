@@ -22,7 +22,7 @@ class LogroController extends Controller
         // return $logros->toJson();
         return response()->json($logros, 200);
         // return response()->json(LogroResource::collection($logros), 200); // Faltan metadatos
-        // return LogroResource::collection($logros);
+        return LogroResource::collection($logros);
     }
 
     /**

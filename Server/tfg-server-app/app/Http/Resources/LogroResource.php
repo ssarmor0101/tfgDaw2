@@ -19,7 +19,7 @@ class LogroResource extends JsonResource
             'juego_id' => $this->juego_id,
             'name' => $this->name,
             'descr' => $this->description,
-            'especial' => $this->juego->name . ' - ' . $this->name,
+            // 'especial' => $this->juego->name . ' - ' . $this->name,
         ];
     }
 }

@@ -17,6 +17,7 @@ class PuntuacionController extends Controller
     public function index()
     {
         $puntuaciones = Puntuacion::all()->sortByDesc(['updated_at', 'puntuacion']);
+        Puntuacion::all()->unique('user_id')->countBy();
         return view('puntuaciones.index', compact('puntuaciones'));
     }
 

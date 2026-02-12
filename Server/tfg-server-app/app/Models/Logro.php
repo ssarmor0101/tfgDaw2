@@ -30,4 +30,13 @@ class Logro extends Model
     public function resultados() {
         return $this->hasMany(Resultado::class, 'logro_id');
     }
+
+    public function rareza() {
+        $juego = $this->juego();
+        $puntuacionesJuego = $juego->puntuaciones(); // No detecta puntuaciones
+        $users = $puntuacionesJuego->unique('user_id');
+        $numberUsers = $users->count();
+        $numberResultados = $this->resultados()->count();
+        return ($numberResultados/$numberUsers)*100;
+    }
 }
