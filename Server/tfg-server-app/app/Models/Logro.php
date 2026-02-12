@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\LogroFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use SebastianBergmann\Environment\Console;
 
 class Logro extends Model
 {
@@ -32,11 +33,11 @@ class Logro extends Model
     }
 
     public function rareza() {
-        $juego = $this->juego();
-        $puntuacionesJuego = $juego->puntuaciones(); // No detecta puntuaciones
+        $juego = $this->juego;
+        $puntuacionesJuego = $juego->puntuaciones; // No detecta puntuaciones
         $users = $puntuacionesJuego->unique('user_id');
         $numberUsers = $users->count();
-        $numberResultados = $this->resultados()->count();
+        $numberResultados = $this->resultados->count();
         return ($numberResultados/$numberUsers)*100;
     }
 }
