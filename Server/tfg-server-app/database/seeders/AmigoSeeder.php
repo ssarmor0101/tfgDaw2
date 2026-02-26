@@ -16,27 +16,6 @@ class AmigoSeeder extends Seeder
      */
     public function run(): void
     {
-        // $amigosPosibles = (User::all()->count())/2;
-        // Amigo::factory()->count($amigosPosibles)->create();
-
-        // ------------------------------------------------------
-
-        // $max = User::count();
-        // $objetivo = intdiv($max, 2);
-
-        // $creados = 0;
-
-        // while ($creados < $objetivo) {
-        //     try {
-        //         Amigo::factory()->create();
-        //         $creados++;
-        //     } catch (\Illuminate\Database\QueryException $e) {
-        //         // Duplicado → ignoramos y seguimos
-        //     }
-        // }
-
-        // -----------------------------------------------------
-
         $users = User::pluck('id')->toArray();
 
         $pares = [];

@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <h1>Editar Logro</h1>
+    <h1>Editar Resultado</h1>
     <form action="{{ route('resultados.update', $resultado) }}" method="POST">
         @csrf
         @method('PUT')

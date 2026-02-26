@@ -9,4 +9,6 @@ abstract class Controller
 {
     use ValidatesRequests;
     use AuthorizesRequests;
+
+    protected $paginatesNumber = 10;
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateJuegoRequest;
 use App\Models\Juego;
 use App\Services\JuegoService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JuegoController extends Controller
 {
@@ -22,9 +23,18 @@ class JuegoController extends Controller
      */
     public function index()
     {
-        $juegos = Juego::all()->sortByDesc('updated_at');
+        $this->authorize('viewAny', Juego::class);
 
-        return view('juegos.index', compact('juegos'));
+        $user = Auth::user();
+
+        $juegos = Juego::orderByDesc('updated_at')->paginate($this->paginatesNumber);
+
+        $extraData = [
+            'createButton' => $user->isAdmin(),
+            'actionButtons' => $user->isAdmin()
+        ];
+
+        return view('juegos.index', compact('juegos', 'extraData'));
     }
 
     /**
@@ -32,6 +42,7 @@ class JuegoController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Juego::class);
         return view('juegos.create');
     }
 
@@ -40,6 +51,7 @@ class JuegoController extends Controller
      */
     public function store(StoreJuegoRequest $request)
     {
+        $this->authorize('create', Juego::class);
         $validate = $request->validated();
 
         // Juego::create($validate);
@@ -53,6 +65,7 @@ class JuegoController extends Controller
      */
     public function show(Juego $juego)
     {
+        $this->authorize('view', $juego);
         return view('juegos.show', compact('juego'));
     }
 
@@ -61,6 +74,7 @@ class JuegoController extends Controller
      */
     public function edit(Juego $juego)
     {
+        $this->authorize('update', $juego);
         return view('juegos.edit', compact('juego'));
     }
 
@@ -69,6 +83,7 @@ class JuegoController extends Controller
      */
     public function update(UpdateJuegoRequest $request, Juego $juego)
     {
+        $this->authorize('update', $juego);
         $validate = $request->validated();
 
         $juego->update($validate);
@@ -81,6 +96,7 @@ class JuegoController extends Controller
      */
     public function destroy(Juego $juego)
     {
+        $this->authorize('delete', $juego);
         // Juego::onlyTrashed()->get();
 
 
@@ -89,6 +105,7 @@ class JuegoController extends Controller
     }
 
     public function restore(Juego $juego) {
+        $this->authorize('restore', $juego);
         $juego->restore();
         return redirect(route('juegos.index'));
     }

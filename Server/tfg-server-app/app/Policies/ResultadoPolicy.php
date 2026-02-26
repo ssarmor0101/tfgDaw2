@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Logro;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\Resultado;
 
-class LogroPolicy
+class ResultadoPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +18,7 @@ class LogroPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Logro $logro): bool
+    public function view(User $user, Resultado $resultado): bool
     {
         return true;
     }
@@ -35,7 +34,7 @@ class LogroPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Logro $logro): bool
+    public function update(User $user, Resultado $resultado): bool
     {
         return $user->isAdmin();
     }
@@ -43,14 +42,14 @@ class LogroPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Logro $logro): bool {
+    public function delete(User $user, Resultado $resultado): bool {
         return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Logro $logro): bool
+    public function restore(User $user, Resultado $resultado): bool
     {
         return $user->isAdmin();
     }
@@ -58,7 +57,7 @@ class LogroPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Logro $logro): bool
+    public function forceDelete(User $user, Resultado $resultado): bool
     {
         return $user->isAdmin();
     }

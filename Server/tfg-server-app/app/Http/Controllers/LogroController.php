@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateLogroRequest;
 use App\Models\Juego;
 use App\Models\Logro;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LogroController extends Controller
 {
@@ -15,8 +16,18 @@ class LogroController extends Controller
      */
     public function index()
     {
-        $logros = Logro::all()->sortByDesc('updated_at');
-        return view('logros.index', compact('logros'));
+        $this->authorize('viewAny', Logro::class);
+        
+        $user = Auth::user();
+
+        $logros = Logro::orderByDesc('updated_at')->paginate($this->paginatesNumber);
+
+        $extraData = [
+            'createButton' => $user->isAdmin(),
+            'actionButtons' => $user->isAdmin()
+        ];
+        
+        return view('logros.index', compact('logros', 'extraData'));
     }
 
     /**
@@ -24,6 +35,7 @@ class LogroController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Logro::class);
         $juegos = Juego::all();
         return view('logros.create', compact('juegos'));
     }
@@ -33,6 +45,7 @@ class LogroController extends Controller
      */
     public function store(StoreLogroRequest $request)
     {
+        $this->authorize('create', Logro::class);
         $validate = $request->validated();
 
         Logro::create($validate);
@@ -45,6 +58,7 @@ class LogroController extends Controller
      */
     public function show(Logro $logro)
     {
+        $this->authorize('view', $logro);
         $juegos = Juego::all();
         return view('logros.show', compact('logro', 'juegos'));
     }
@@ -54,6 +68,7 @@ class LogroController extends Controller
      */
     public function edit(Logro $logro)
     {
+        $this->authorize('update', $logro);
         $juegos = Juego::all();
         return view('logros.edit', compact('logro', 'juegos'));
     }
@@ -63,6 +78,7 @@ class LogroController extends Controller
      */
     public function update(UpdateLogroRequest $request, Logro $logro)
     {
+        $this->authorize('update', $logro);
         $validate = $request->validated();
 
         $logro->update($validate);
@@ -81,6 +97,7 @@ class LogroController extends Controller
     }
 
     public function restore(Logro $logro) {
+        $this->authorize('restore', $logro);
         $logro->restore();
         return redirect(route('logros.index'));
     }

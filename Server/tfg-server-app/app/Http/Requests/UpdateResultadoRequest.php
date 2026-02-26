@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+use App\Models\Resultado;
+
 class UpdateResultadoRequest extends FormRequest
 {
     /**
@@ -12,7 +14,7 @@ class UpdateResultadoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', Resultado::class);
     }
 
     /**

@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Logro;
+
 class StoreLogroRequest extends FormRequest
 {
     /**
@@ -11,7 +13,7 @@ class StoreLogroRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Logro::class);
     }
 
     /**

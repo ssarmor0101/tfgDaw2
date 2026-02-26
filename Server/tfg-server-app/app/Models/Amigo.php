@@ -54,6 +54,14 @@ class Amigo extends Model
         return $this->belongsTo(User::class, 'friend_id');
     }
 
+    public function isFriend(User $user): bool
+    {
+        $currentId = $this->id;
+        $userId = $user->id;
+        if ($currentId > $userId) [$currentId, $userId] = [$userId, $currentId];
+        return self::where('user_id', $currentId)->where('friend_id', $userId)->exists();
+    }
+
     /**
      * Check whether unordered pair exists (returns bool).
      */

@@ -6,6 +6,7 @@ use App\Models\Amigo;
 use App\Models\User;
 use App\Http\Requests\StoreAmigoRequest;
 use App\Http\Requests\UpdateAmigoRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AmigoController extends Controller
 {
@@ -14,8 +15,23 @@ class AmigoController extends Controller
      */
     public function index()
     {
-        $amigos = Amigo::orderBy('user_id')->orderBy('friend_id')->with(['user','friend'])->get();
-        return view('amigos.index', compact('amigos'));
+        $this->authorize('viewAny', Amigo::class);
+
+        $user = Auth::user();
+        $amigos = [];
+
+        if ($user->isAdmin()) {
+            $amigos = Amigo::with(['user','friend'])->paginate($this->paginatesNumber);
+        } else {
+            $amigos = Amigo::with(['user','friend'])->where('user_id', $user->id)->orWhere('friend_id', $user->id)->paginate($this->paginatesNumber);
+        }
+
+        $extraData = [
+            'createButton' => $user->isAdmin(),
+            'actionButtons' => $user->isAdmin()
+        ];
+
+        return view('amigos.index', compact('amigos', 'extraData'));
     }
 
     /**
@@ -23,6 +39,7 @@ class AmigoController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Amigo::class);
         $users = User::orderBy('name')->get();
         return view('amigos.create', compact('users'));
     }
@@ -32,6 +49,7 @@ class AmigoController extends Controller
      */
     public function store(StoreAmigoRequest $request)
     {
+        $this->authorize('create', Amigo::class);
         // handled by StoreAmigoRequest
         /** @var \App\Http\Requests\StoreAmigoRequest $request */
         $data = $request->validated();
@@ -47,7 +65,9 @@ class AmigoController extends Controller
      */
     public function show(Amigo $amigo)
     {
-        return view('amigos.show', compact('amigo'));
+        $this->authorize('view', $amigo);
+        $users = User::all();
+        return view('amigos.show', compact('amigo', 'users'));
     }
 
     /**
@@ -55,6 +75,7 @@ class AmigoController extends Controller
      */
     public function edit(Amigo $amigo)
     {
+        $this->authorize('update', $amigo);
         $users = User::orderBy('name')->get();
         return view('amigos.edit', compact('amigo','users'));
     }
@@ -64,6 +85,7 @@ class AmigoController extends Controller
      */
     public function update(UpdateAmigoRequest $request, Amigo $amigo)
     {
+        $this->authorize('update', $amigo);
         /** @var \App\Http\Requests\UpdateAmigoRequest $request */
         $data = $request->validated();
         if ($data['user_id'] > $data['friend_id']) {
@@ -78,6 +100,7 @@ class AmigoController extends Controller
      */
     public function destroy(Amigo $amigo)
     {
+        $this->authorize('create', $amigo);
         $amigo->delete();
         return redirect()->route('amigos.index');
     }

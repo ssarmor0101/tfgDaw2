@@ -4,13 +4,15 @@
             <li>
                 {{ $juego->name }} -
                 {{ $juego->description }} -
-                <a href="{{ route('juegos.show', $juego) }}">Ver</a> -
-                <a href="{{ route('juegos.edit', $juego) }}">Editar</a> -
-                <form action="{{ route('juegos.destroy', $juego) }}" method="POST" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button>Eliminar</button>
-                </form>
+                <a href="{{ route('juegos.show', $juego) }}">Ver</a>
+                @if(isset($extraData['actionButtons']) && $extraData['actionButtons'])
+                    - <a href="{{ route('juegos.edit', $juego) }}">Editar</a> -
+                    <form action="{{ route('juegos.destroy', $juego) }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button>Eliminar</button>
+                    </form>
+                @endif
             </li>
         @endforeach
     </ul>

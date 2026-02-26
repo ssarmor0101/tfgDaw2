@@ -28,15 +28,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    Route::resources([
-        'juegos' => JuegoController::class,
-        'users' => UserController::class,
-        'logros' => LogroController::class,
-        'resultados' => ResultadoController::class,
-        // 'puntuaciones' => PuntuacionController::class,
-        'amigos' => AmigoController::class,
-    ]);
-
+    Route::resource('juegos', JuegoController::class);
+    Route::resource('logros', LogroController::class);
+    Route::resource('resultados', ResultadoController::class);
+    Route::resource('amigos', AmigoController::class);
     Route::resource('puntuaciones', PuntuacionController::class)->parameters(['puntuaciones' => 'puntuacion']);
+
+    Route::middleware('rol:admin')->group(function () {
+        Route::resource('users', UserController::class);
+    });
 
 });

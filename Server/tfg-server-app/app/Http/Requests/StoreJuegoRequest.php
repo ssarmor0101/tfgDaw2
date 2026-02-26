@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Juego;
 
 class StoreJuegoRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreJuegoRequest extends FormRequest
     {
         // return $this->user()->isAdmin();
 
-        return $this->user()->can('create');
+        return $this->user()->can('create', Juego::class);
     }
 
     /**

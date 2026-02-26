@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Juego;
+
 class UpdateJuegoRequest extends FormRequest
 {
     /**
@@ -11,7 +13,7 @@ class UpdateJuegoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', Juego::class);
     }
 
     /**

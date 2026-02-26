@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Puntuacion;
+
 class UpdatePuntuacionRequest extends FormRequest
 {
     /**
@@ -11,7 +13,7 @@ class UpdatePuntuacionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', Puntuacion::class);
     }
 
     /**

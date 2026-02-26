@@ -4,13 +4,16 @@
             <li>
                 {{ $resultado->user->name }} -
                 {{ $resultado->logro->name }} -
-                <a href="{{ route('resultados.show', $resultado) }}">Ver</a> -
-                <a href="{{ route('resultados.edit', $resultado) }}">Editar</a> -
-                <form action="{{ route('resultados.destroy', $resultado) }}" method="POST" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button>Eliminar</button>
-                </form>
+                <a href="{{ route('resultados.show', $resultado) }}">Ver</a>
+                @if(isset($extraData['actionButtons']) && $extraData['actionButtons'])
+                    -
+                    <a href="{{ route('resultados.edit', $resultado) }}">Editar</a> -
+                    <form action="{{ route('resultados.destroy', $resultado) }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button>Eliminar</button>
+                    </form>
+                @endif
             </li>
         @endforeach
     </ul>

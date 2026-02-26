@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <h1>Ver Logro</h1>
+    <h1>Ver Resultado</h1>
 
     <label>Usuario</label>
     <select name="user_id" disabled>

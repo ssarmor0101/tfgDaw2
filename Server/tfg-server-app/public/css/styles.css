@@ -1,0 +1,9 @@
+/* Reducir el tamaño de los iconos */
+.pagination {
+    font-size: 14px;  /* Ajusta el tamaño de la fuente */
+}
+
+.pagination svg {
+    width: 16px;   /* Ajusta el tamaño de los iconos */
+    height: 16px;
+}

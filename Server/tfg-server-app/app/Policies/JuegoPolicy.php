@@ -13,7 +13,7 @@ class JuegoPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class JuegoPolicy
      */
     public function view(User $user, Juego $juego): bool
     {
-        return false;
+        return true;
     }
 
     /**

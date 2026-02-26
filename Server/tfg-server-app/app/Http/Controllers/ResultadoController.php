@@ -8,6 +8,7 @@ use App\Models\Logro;
 use App\Models\Resultado;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ResultadoController extends Controller
 {
@@ -16,8 +17,21 @@ class ResultadoController extends Controller
      */
     public function index()
     {
-        $resultados = Resultado::all()->sortByDesc('updated_at');
-        return view('resultados.index', compact('resultados'));
+        $this->authorize('viewAny', Resultado::class);
+        $user = Auth::user();
+        $resultados = [];
+
+        if ($user->isAdmin()) {
+            $resultados = Resultado::orderByDesc('updated_at')->paginate($this->paginatesNumber);
+        } else {
+            $resultados = Resultado::where('user_id', $user->id)->orderByDesc('updated_at')->paginate($this->paginatesNumber);
+        }
+        
+        $extraData = [
+            'createButton' => $user->isAdmin(),
+            'actionButtons' => $user->isAdmin()
+        ];
+        return view('resultados.index', compact('resultados', 'extraData'));
     }
 
     /**
@@ -25,6 +39,7 @@ class ResultadoController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Resultado::class);
         $users = User::all();
         $logros = Logro::all();
         return view('resultados.create', compact('users', 'logros'));
@@ -35,6 +50,7 @@ class ResultadoController extends Controller
      */
     public function store(StoreResultadoRequest $request)
     {
+        $this->authorize('create', Resultado::class);
         $validate = $request->validated();
 
         Resultado::create($validate);
@@ -47,6 +63,7 @@ class ResultadoController extends Controller
      */
     public function show(Resultado $resultado)
     {
+        $this->authorize('view', $resultado);
         $users = User::all();
         $logros = Logro::all();
         return view('resultados.show', compact('users', 'logros', 'resultado'));
@@ -57,6 +74,7 @@ class ResultadoController extends Controller
      */
     public function edit(Resultado $resultado)
     {
+        $this->authorize('update', $resultado);
         $users = User::all();
         $logros = Logro::all();
         return view('resultados.edit', compact('users', 'logros', 'resultado'));
@@ -67,6 +85,7 @@ class ResultadoController extends Controller
      */
     public function update(UpdateResultadoRequest $request, Resultado $resultado)
     {
+        $this->authorize('update', $resultado);
         $validate = $request->validated();
 
         $resultado->update($validate);
@@ -79,6 +98,7 @@ class ResultadoController extends Controller
      */
     public function destroy(Resultado $resultado)
     {
+        $this->authorize('delete', $resultado);
         $resultado->delete();
         return redirect(route('resultados.index'));
     }

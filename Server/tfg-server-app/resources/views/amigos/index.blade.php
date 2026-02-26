@@ -3,11 +3,15 @@
 @section('content')
     <h1>Amigos</h1>
 
-    @if(session('success'))
-        <div class="success">{{ session('success') }}</div>
+    @if(isset($extraData['createButton']) && $extraData['createButton'])
+        <a href="{{ route('amigos.create') }}">Crear amistad</a>
     @endif
 
-    <a href="{{ route('amigos.create') }}">Crear amistad</a>
-
     @include('amigos._list')
+
+    @if(!empty($amigos))
+        <div class="pagination">
+            {{ $amigos->links() }}
+        </div>
+    @endif
 @endsection
