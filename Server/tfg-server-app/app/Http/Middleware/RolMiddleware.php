@@ -17,11 +17,11 @@ class RolMiddleware
     {
         $user = auth()->user();
 
-        if (!$user || !$user->rol) {
+        if (!$user || !$user->rol || !$user->rol->slug) {
             abort(403);
         }
 
-        if (!in_array($user->rol->slug, $rols)) {
+        if (!in_array($user->rol->slug->value, $rols)) {
             return redirect()->route('dashboard.index');
         }
 

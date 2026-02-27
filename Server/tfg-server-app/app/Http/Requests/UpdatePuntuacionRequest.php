@@ -13,7 +13,7 @@ class UpdatePuntuacionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', Puntuacion::class);
+        return $this->user()->can('update', $this->route('puntuacion'));
     }
 
     /**

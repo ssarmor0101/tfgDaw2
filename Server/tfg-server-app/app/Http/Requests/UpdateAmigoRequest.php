@@ -9,7 +9,7 @@ class UpdateAmigoRequest extends FormRequest
 {
     public function authorize()
     {
-        return $this->user()->can('update', Amigo::class);
+        return $this->user()->can('update', $this->route('amigo'));
     }
 
     public function rules()

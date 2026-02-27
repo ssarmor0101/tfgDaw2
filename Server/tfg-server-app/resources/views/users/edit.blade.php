@@ -25,11 +25,10 @@
         <br/><br/>
 
         <label>Actualizar contraseña</label>
-        <input type="checkbox" name="use_password" value="1"/>
+        <input type="checkbox" name="use_password" value="1" @checked( old('use_password') == true )/>
 
         <br/><br/>
 
-        @if(true)
         <label>Password</label>
         <input type="password" name="password"/>
 
@@ -43,7 +42,6 @@
         @enderror
         
         <br/><br/>
-        @endif
 
         <label>Rol</label>
         <select name="rol_id">

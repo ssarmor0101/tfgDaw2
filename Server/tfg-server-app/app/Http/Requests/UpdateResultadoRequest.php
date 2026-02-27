@@ -14,7 +14,7 @@ class UpdateResultadoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', Resultado::class);
+        return $this->user()->can('update', $this->route('resultado'));
     }
 
     /**

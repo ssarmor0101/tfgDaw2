@@ -13,7 +13,7 @@ class UpdateLogroRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', Logro::class);
+        return $this->user()->can('update', $this->route('logro'));
     }
 
     /**

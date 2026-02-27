@@ -10,11 +10,32 @@ use App\Models\User;
 class UpdateUserRequest extends FormRequest
 {
     /**
+     * Strip password fields if the user isn't actually changing the password.
+     * This prevents the remaining validation rules (string|min:4|confirmed)
+     * from running when password is empty or not provided.
+     */
+    protected function prepareForValidation(): void
+    {
+        // if the toggle is not set or false, we don't want any password data
+        if (!$this->boolean('use_password')) {
+            $this->request->remove('password');
+            $this->request->remove('password_confirmation');
+        }
+
+        // also drop password if it's empty so rules like min:4 don't fire
+        if ($this->filled('password') === false) {
+            $this->request->remove('password');
+            $this->request->remove('password_confirmation');
+        }
+    }
+
+    /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', User::class);
+        // use the route model so the policy receives both arguments
+        return $this->user()->can('update', $this->route('user'));
     }
 
     /**
@@ -34,7 +55,7 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users')->ignore($this->user)
             ],
             'use_password' => 'sometimes|boolean',
-            'password' => 'sometimes|required_if:use_password,1|string|min:4|confirmed',
+            'password' => 'sometimes|nullable|required_if:use_password,1|string|min:4|confirmed',
             'rol_id' => 'sometimes|required|exists:roles,id',
         ];
     }

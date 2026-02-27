@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $this->authorize('viewAny', User::class);
-        $users = User::orderByDesc('updated_at')->paginate($paginatesNumber);
+        $users = User::orderByDesc('updated_at')->paginate($this->paginatesNumber);
         return view('users.index', compact('users'));
     }
 
