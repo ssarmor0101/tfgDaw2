@@ -33,4 +33,18 @@ class StoreResultadoRequest extends FormRequest
             'logro_id' => 'required|integer|exists:logros,id',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'user_id.required' => 'El usuario es obligatorio.',
+            'user_id.integer' => 'El usuario debe ser un número.',
+            'user_id.exists' => 'El usuario no existe.',
+            'user_id.unique' => 'El usuario ya tiene registrado ese logro.',
+
+            'logro_id.required' => 'El logro es obligatorio.',
+            'logro_id.integer' => 'El logro debe ser un número.',
+            'logro_id.exists' => 'El logro no existe.',
+        ];
+    }
 }

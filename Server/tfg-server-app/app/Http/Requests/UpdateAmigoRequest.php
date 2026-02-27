@@ -37,4 +37,18 @@ class UpdateAmigoRequest extends FormRequest
             }
         });
     }
+
+    public function messages()
+    {
+        return [
+            'user_id.required' => 'El usuario A es obligatorio.',
+            'user_id.integer' => 'El usuario A debe ser un número.',
+            'user_id.exists' => 'El usuario A no existe.',
+
+            'friend_id.required' => 'El usuario B es obligatorio.',
+            'friend_id.integer' => 'El usuario B debe ser un número.',
+            'friend_id.exists' => 'El usuario B no existe.',
+            'friend_id.different' => 'Los dos usuarios deben ser distintos.',
+        ];
+    }
 }

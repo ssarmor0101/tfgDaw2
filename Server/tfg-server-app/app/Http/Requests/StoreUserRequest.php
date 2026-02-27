@@ -34,13 +34,25 @@ class StoreUserRequest extends FormRequest
 
     
 
-    // public function messages()
-    // {
-    //     return [
-    //         'name' => [
-    //             'required' => 'Mensaje',
-    //             'max' => 'Mensaje 2'
-    //         ]
-    //     ];
-    // }
+    public function messages()
+    {
+        return [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser texto.',
+            'name.max' => 'El nombre no puede tener más de :max caracteres.',
+
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo debe ser una dirección válida.',
+            'email.max' => 'El correo no puede tener más de :max caracteres.',
+            'email.unique' => 'Ese correo ya está en uso.',
+
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.string' => 'La contraseña debe ser texto.',
+            'password.min' => 'La contraseña debe tener al menos :min caracteres.',
+            'password.confirmed' => 'La confirmación de contraseña no coincide.',
+
+            'rol_id.required' => 'El rol es obligatorio.',
+            'rol_id.exists' => 'El rol seleccionado no existe.',
+        ];
+    }
 }

@@ -38,4 +38,27 @@ class UpdateUserRequest extends FormRequest
             'rol_id' => 'sometimes|required|exists:roles,id',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser texto.',
+            'name.max' => 'El nombre no puede tener más de :max caracteres.',
+
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo debe ser una dirección válida.',
+            'email.max' => 'El correo no puede tener más de :max caracteres.',
+            'email.unique' => 'Ese correo ya está en uso.',
+
+            'use_password.boolean' => 'El indicador de uso de contraseña debe ser verdadero o falso.',
+            'password.required_if' => 'La contraseña es obligatoria cuando se solicita.',
+            'password.string' => 'La contraseña debe ser texto.',
+            'password.min' => 'La contraseña debe tener al menos :min caracteres.',
+            'password.confirmed' => 'La confirmación de contraseña no coincide.',
+
+            'rol_id.required' => 'El rol es obligatorio cuando se proporciona.',
+            'rol_id.exists' => 'El rol seleccionado no existe.',
+        ];
+    }
 }

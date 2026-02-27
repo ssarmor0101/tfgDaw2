@@ -29,4 +29,21 @@ class StorePuntuacionRequest extends FormRequest
             'puntuacion' => 'required|integer|min:0',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'user_id.required' => 'El usuario es obligatorio.',
+            'user_id.integer' => 'El usuario debe ser un número.',
+            'user_id.exists' => 'El usuario no existe.',
+
+            'juego_id.required' => 'El juego es obligatorio.',
+            'juego_id.integer' => 'El juego debe ser un número.',
+            'juego_id.exists' => 'El juego no existe.',
+
+            'puntuacion.required' => 'La puntuación es obligatoria.',
+            'puntuacion.integer' => 'La puntuación debe ser un número.',
+            'puntuacion.min' => 'La puntuación debe ser como mínimo :min.',
+        ];
+    }
 }

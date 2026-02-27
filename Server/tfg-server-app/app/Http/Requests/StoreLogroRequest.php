@@ -29,4 +29,23 @@ class StoreLogroRequest extends FormRequest
             'description' => 'required|string|max:250|filled',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'juego_id.required' => 'El juego es obligatorio.',
+            'juego_id.integer' => 'El juego debe ser un número.',
+            'juego_id.exists' => 'El juego seleccionado no existe.',
+
+            'name.required' => 'El nombre del logro es obligatorio.',
+            'name.string' => 'El nombre debe ser texto.',
+            'name.max' => 'El nombre no puede tener más de :max caracteres.',
+            'name.filled' => 'El nombre no puede estar vacío.',
+
+            'description.required' => 'La descripción es obligatoria.',
+            'description.string' => 'La descripción debe ser texto.',
+            'description.max' => 'La descripción no puede tener más de :max caracteres.',
+            'description.filled' => 'La descripción no puede estar vacía.',
+        ];
+    }
 }

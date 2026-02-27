@@ -32,7 +32,14 @@ class UpdateJuegoRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.unique' => 'El nombre del juego ya existe',
+            'name.required' => 'El nombre del juego es obligatorio.',
+            'name.string' => 'El nombre debe ser texto.',
+            'name.max' => 'El nombre no puede tener más de :max caracteres.',
+            'name.unique' => 'El nombre del juego ya existe.',
+
+            'description.required' => 'La descripción es obligatoria.',
+            'description.string' => 'La descripción debe ser texto.',
+            'description.max' => 'La descripción no puede tener más de :max caracteres.',
         ];
     }
 }

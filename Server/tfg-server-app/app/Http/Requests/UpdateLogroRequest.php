@@ -29,4 +29,20 @@ class UpdateLogroRequest extends FormRequest
             'description' => 'required|string|max:250'
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'juego_id.required' => 'El juego es obligatorio.',
+            'juego_id.exists' => 'El juego seleccionado no existe.',
+
+            'name.required' => 'El nombre del logro es obligatorio.',
+            'name.string' => 'El nombre debe ser texto.',
+            'name.max' => 'El nombre no puede tener más de :max caracteres.',
+
+            'description.required' => 'La descripción es obligatoria.',
+            'description.string' => 'La descripción debe ser texto.',
+            'description.max' => 'La descripción no puede tener más de :max caracteres.',
+        ];
+    }
 }
