@@ -10,18 +10,20 @@ Route::post('/login', [AuthController::class, 'login'])->name('api.auth.login');
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('/juegos', [JuegoController::class, 'index'])->name('api.juegos.index');
-    Route::post('/juegos', [JuegoController::class, 'store'])->name('api.juegos.store');
+    Route::as('api.')->group(function () {
+        Route::get('/juegos', [JuegoController::class, 'index'])->name('juegos.index');
+        Route::post('/juegos', [JuegoController::class, 'store'])->name('juegos.store');
 
-    Route::get('/logros', [LogroController::class, 'index'])->name('api.logros.index');
-    Route::post('/logros', [LogroController::class, 'store'])->name('api.logros.store');
+        Route::get('/logros', [LogroController::class, 'index'])->name('logros.index');
+        Route::post('/logros', [LogroController::class, 'store'])->name('logros.store');
 
-    // Route::apiResource('/juegos', JuegoController::class);
+        // Route::apiResource('/juegos', JuegoController::class);
 
-    // Route::apiResources([
-    //     'juegos' => JuegoController::class,
-    //     'logros' => LogroController::class,
-    //     'users' => UserController::class,
-    // ]);
+        // Route::apiResources([
+        //     'juegos' => JuegoController::class,
+        //     'logros' => LogroController::class,
+        //     'users' => UserController::class,
+        // ]);
+    });
 
 });
