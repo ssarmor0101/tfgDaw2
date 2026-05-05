@@ -16,8 +16,8 @@ class LogroResource extends JsonResource
     {
         // $numeroUsuarios = User::all()->count();
         $numeroJugadoresUnicos = Puntuacion::where('juego_id', $this->juego_id)->distinct('user_id')->count('user_id');
-        $numeroJugadoresConLogro Resultado::where('logro_id', $this->id)->count('user_id');
-        $porcentaje = (floatval($numeroJugadoresConLogro)/floatval($numeroJugadoresUnicos))*100;
+        $numeroJugadoresConLogro = Resultado::where('logro_id', $this->id)->count('user_id');
+        $porcentaje = (floatval($numeroJugadoresConLogro) / floatval($numeroJugadoresUnicos)) * 100;
         return [
             'juego_id' => $this->juego_id,
             'name' => $this->name,

@@ -22,11 +22,11 @@ class ResultadoController extends Controller
         $resultados = [];
 
         if ($user->isAdmin()) {
-            $resultados = Resultado::orderByDesc('updated_at')->paginate($this->paginatesNumber);
+            $resultados = Resultado::orderByDesc('updated_at')->paginate(self::DEFAULT_PAGES_NUMBER);
         } else {
-            $resultados = Resultado::where('user_id', $user->id)->orderByDesc('updated_at')->paginate($this->paginatesNumber);
+            $resultados = Resultado::where('user_id', $user->id)->orderByDesc('updated_at')->paginate(self::DEFAULT_PAGES_NUMBER);
         }
-        
+
         $extraData = [
             'createButton' => $user->isAdmin(),
             'actionButtons' => $user->isAdmin()

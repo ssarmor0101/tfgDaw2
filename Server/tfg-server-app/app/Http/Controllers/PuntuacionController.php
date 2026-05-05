@@ -21,10 +21,10 @@ class PuntuacionController extends Controller
         $user = Auth::user();
         $puntuaciones = [];
 
-        if($user->isAdmin()) {
-            $puntuaciones = Puntuacion::orderByDesc('updated_at', 'puntuacion')->paginate($this->paginatesNumber);
+        if ($user->isAdmin()) {
+            $puntuaciones = Puntuacion::orderByDesc('updated_at', 'puntuacion')->paginate(self::DEFAULT_PAGES_NUMBER);
         } else {
-            $puntuaciones = Puntuacion::where('user_id', $user->id)->orderByDesc('updated_at', 'puntuacion')->paginate($this->paginatesNumber);
+            $puntuaciones = Puntuacion::where('user_id', $user->id)->orderByDesc('updated_at', 'puntuacion')->paginate(self::DEFAULT_PAGES_NUMBER);
         }
 
         $extraData = [

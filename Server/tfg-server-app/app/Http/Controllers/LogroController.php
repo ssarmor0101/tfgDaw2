@@ -17,16 +17,16 @@ class LogroController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Logro::class);
-        
+
         $user = Auth::user();
 
-        $logros = Logro::orderByDesc('updated_at')->paginate($this->paginatesNumber);
+        $logros = Logro::orderByDesc('updated_at')->paginate(self::DEFAULT_PAGES_NUMBER);
 
         $extraData = [
             'createButton' => $user->isAdmin(),
             'actionButtons' => $user->isAdmin()
         ];
-        
+
         return view('logros.index', compact('logros', 'extraData'));
     }
 
@@ -96,7 +96,8 @@ class LogroController extends Controller
         return redirect(route('logros.index'));
     }
 
-    public function restore(Logro $logro) {
+    public function restore(Logro $logro)
+    {
         $this->authorize('restore', $logro);
         $logro->restore();
         return redirect(route('logros.index'));

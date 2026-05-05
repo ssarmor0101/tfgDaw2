@@ -27,7 +27,7 @@ class JuegoController extends Controller
 
         $user = Auth::user();
 
-        $juegos = Juego::orderByDesc('updated_at')->paginate($this->paginatesNumber);
+        $juegos = Juego::orderByDesc('updated_at')->paginate(self::DEFAULT_PAGES_NUMBER);
 
         $extraData = [
             'createButton' => $user->isAdmin(),
@@ -104,7 +104,8 @@ class JuegoController extends Controller
         return redirect(route('juegos.index'));
     }
 
-    public function restore(Juego $juego) {
+    public function restore(Juego $juego)
+    {
         $this->authorize('restore', $juego);
         $juego->restore();
         return redirect(route('juegos.index'));

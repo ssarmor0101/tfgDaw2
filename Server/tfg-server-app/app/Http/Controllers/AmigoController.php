@@ -21,9 +21,9 @@ class AmigoController extends Controller
         $amigos = [];
 
         if ($user->isAdmin()) {
-            $amigos = Amigo::with(['user','friend'])->paginate($this->paginatesNumber);
+            $amigos = Amigo::with(['user', 'friend'])->paginate(self::DEFAULT_PAGES_NUMBER);
         } else {
-            $amigos = Amigo::with(['user','friend'])->where('user_id', $user->id)->orWhere('friend_id', $user->id)->paginate($this->paginatesNumber);
+            $amigos = Amigo::with(['user', 'friend'])->where('user_id', $user->id)->orWhere('friend_id', $user->id)->paginate(self::DEFAULT_PAGES_NUMBER);
         }
 
         $extraData = [
@@ -77,7 +77,7 @@ class AmigoController extends Controller
     {
         $this->authorize('update', $amigo);
         $users = User::orderBy('name')->get();
-        return view('amigos.edit', compact('amigo','users'));
+        return view('amigos.edit', compact('amigo', 'users'));
     }
 
     /**

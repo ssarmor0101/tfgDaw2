@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $this->authorize('viewAny', User::class);
-        $users = User::orderByDesc('updated_at')->paginate($this->paginatesNumber);
+        $users = User::orderByDesc('updated_at')->paginate(self::DEFAULT_PAGES_NUMBER);
         return view('users.index', compact('users'));
     }
 
@@ -86,7 +86,8 @@ class UserController extends Controller
         return redirect(route('users.index'));
     }
 
-    public function restore(User $user) {
+    public function restore(User $user)
+    {
         $this->authorize('restore', $user);
         $user->restore();
         return redirect(route('users.index'));
