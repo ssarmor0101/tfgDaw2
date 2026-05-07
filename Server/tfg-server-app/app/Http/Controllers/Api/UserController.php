@@ -8,8 +8,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Services\UserService;
 use App\Helpers\JsonResponseBuilderHelper;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Exception;
 
 class UserController extends Controller
@@ -28,7 +28,7 @@ class UserController extends Controller
             $users = $this->userService->getAllUsers();
             return JsonResponseBuilderHelper::buildJsonSuccess('Users retrieved successfully', ['data' => $users]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Failed to retrieve users: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Failed to retrieve users: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -38,10 +38,11 @@ class UserController extends Controller
     public function store(StoreUserRequest $request): JsonResponse
     {
         try {
-            $user = $this->userService->createUser($request->all());
+            $userDto = UserDto::fromArray($request->validated());
+            $user = $this->userService->createUser($userDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('User creado con exito', ['data' => $user]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear user: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al crear user: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -57,7 +58,7 @@ class UserController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('User retrieved successfully', ['data' => $user]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error retrieving user: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error retrieving user: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -67,14 +68,15 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, int $id): JsonResponse
     {
         try {
-            $userDto = UserDto::fromArray($request->validated());
-            $updated = $this->userService->updateUser($id, $userDto->toArray());
-            if (!$updated) {
-                throw new Exception('User not found or update failed', 404);
+            $user = User::find($id);
+            if (!$user) {
+                throw new Exception('User not found', 404);
             }
+            $userDto = UserDto::fromArray($request->validated());
+            $updated = $this->userService->updateUser($user, $userDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('User actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar user: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar user: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -84,13 +86,14 @@ class UserController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try {
-            $deleted = $this->userService->deleteUser($id);
-            if (!$deleted) {
-                throw new Exception('User not found or deletion failed', 404);
+            $user = User::find($id);
+            if (!$user) {
+                throw new Exception('User not found', 404);
             }
+            $deleted = $this->userService->deleteUser($user);
             return JsonResponseBuilderHelper::buildJsonSuccess('User eliminado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar user: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar user: ' . $e->getMessage(), $e->getCode());
         }
     }
 }

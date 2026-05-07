@@ -25,29 +25,19 @@ class UserService
         return $user ? UserDto::fromModel($user) : null;
     }
 
-    public function createUser(array $data): UserDto
+    public function createUser(UserDto $userDto): UserDto
     {
-        $userDto = UserDto::fromArray($data);
         $user = $this->userRepository->create($userDto);
         return UserDto::fromModel($user);
     }
 
-    public function updateUser(int $id, array $data): bool
+    public function updateUser(User $user, UserDto $userDto): bool
     {
-        $user = $this->userRepository->find($id);
-        if (!$user) {
-            return false;
-        }
-        $userDto = UserDto::fromArray($data);
         return $this->userRepository->update($user, $userDto);
     }
 
-    public function deleteUser(int $id): bool
+    public function deleteUser(User $user): bool
     {
-        $user = $this->userRepository->find($id);
-        if (!$user) {
-            return false;
-        }
         return $this->userRepository->delete($user);
     }
 }

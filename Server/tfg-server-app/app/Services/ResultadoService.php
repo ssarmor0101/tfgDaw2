@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\ResultadoRepository;
 use App\DTOs\Resultado\ResultadoDto;
+use App\Models\Resultado;
 use Illuminate\Support\Collection;
 
 class ResultadoService
@@ -24,29 +25,19 @@ class ResultadoService
         return $resultado ? ResultadoDto::fromModel($resultado) : null;
     }
 
-    public function createResultado(array $data): ResultadoDto
+    public function createResultado(ResultadoDto $resultadoDto): ResultadoDto
     {
-        $resultadoDto = ResultadoDto::fromArray($data);
         $resultado = $this->resultadoRepository->create($resultadoDto);
         return ResultadoDto::fromModel($resultado);
     }
 
-    public function updateResultado(int $id, array $data): bool
+    public function updateResultado(Resultado $resultado, ResultadoDto $resultadoDto): bool
     {
-        $resultado = $this->resultadoRepository->find($id);
-        if (!$resultado) {
-            return false;
-        }
-        $resultadoDto = ResultadoDto::fromArray($data);
         return $this->resultadoRepository->update($resultado, $resultadoDto);
     }
 
-    public function deleteResultado(int $id): bool
+    public function deleteResultado(Resultado $resultado): bool
     {
-        $resultado = $this->resultadoRepository->find($id);
-        if (!$resultado) {
-            return false;
-        }
         return $this->resultadoRepository->delete($resultado);
     }
 }

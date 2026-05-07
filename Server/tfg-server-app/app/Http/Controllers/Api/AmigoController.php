@@ -7,6 +7,8 @@ use App\Http\Requests\StoreAmigoRequest;
 use App\Http\Requests\UpdateAmigoRequest;
 use App\Services\AmigoService;
 use App\Helpers\JsonResponseBuilderHelper;
+use App\Models\Amigo;
+use App\DTOs\Amigo\AmigoDto;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Exception;
@@ -28,7 +30,7 @@ class AmigoController extends Controller
             $amigos = $user->isAdmin() ? $this->amigoService->getAllAmigos() : $this->amigoService->getAmigosByUserId($user->id);
             return JsonResponseBuilderHelper::buildJsonSuccess('Amigos recibidos correctamente', ['data' => $amigos]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al recibir amigos: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al recibir amigos: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -38,11 +40,11 @@ class AmigoController extends Controller
     public function store(StoreAmigoRequest $request): JsonResponse
     {
         try {
-            $validated = $request->validated();
-            $amigo = $this->amigoService->createAmigo($validated);
+            $amigoDto = AmigoDto::fromArray($request->validated());
+            $amigo = $this->amigoService->createAmigo($amigoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Amigo creado con exito', ['data' => $amigo]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear amigo: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al crear amigo: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -58,7 +60,7 @@ class AmigoController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('Amigo recibido correctamente', ['data' => $amigo]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al recibir amigo: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al recibir amigo: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -68,14 +70,15 @@ class AmigoController extends Controller
     public function update(UpdateAmigoRequest $request, int $id): JsonResponse
     {
         try {
-            $validated = $request->validated();
-            $updated = $this->amigoService->updateAmigo($id, $validated);
-            if (!$updated) {
-                throw new Exception('Amigo no encontrado o error al actualizar', 404);
+            $amigo = Amigo::find($id);
+            if (!$amigo) {
+                throw new Exception('Amigo no encontrado', 404);
             }
+            $amigoDto = AmigoDto::fromArray($request->validated());
+            $updated = $this->amigoService->updateAmigo($amigo, $amigoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Amigo actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar amigo: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar amigo: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -85,13 +88,14 @@ class AmigoController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try {
-            $deleted = $this->amigoService->deleteAmigo($id);
-            if (!$deleted) {
-                throw new Exception('Amigo no encontrado o error al eliminar', 404);
+            $amigo = Amigo::find($id);
+            if (!$amigo) {
+                throw new Exception('Amigo no encontrado', 404);
             }
+            $deleted = $this->amigoService->deleteAmigo($amigo);
             return JsonResponseBuilderHelper::buildJsonSuccess('Amigo eliminado correctamente');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar amigo: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar amigo: ' . $e->getMessage(), $e->getCode());
         }
     }
 }

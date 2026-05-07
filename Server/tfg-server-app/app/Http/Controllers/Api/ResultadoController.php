@@ -7,8 +7,9 @@ use App\Http\Requests\StoreResultadoRequest;
 use App\Http\Requests\UpdateResultadoRequest;
 use App\Services\ResultadoService;
 use App\Helpers\JsonResponseBuilderHelper;
+use App\Models\Resultado;
+use App\DTOs\Resultado\ResultadoDto;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Exception;
 
 class ResultadoController extends Controller
@@ -27,7 +28,7 @@ class ResultadoController extends Controller
             $resultados = $this->resultadoService->getAllResultados();
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultados obtenidos con exito', ['data' => $resultados]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener resultados: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al obtener resultados: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -37,10 +38,11 @@ class ResultadoController extends Controller
     public function store(StoreResultadoRequest $request): JsonResponse
     {
         try {
-            $resultado = $this->resultadoService->createResultado($request->all());
+            $resultadoDto = ResultadoDto::fromArray($request->validated());
+            $resultado = $this->resultadoService->createResultado($resultadoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado creado con exito', ['data' => $resultado]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear resultado: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al crear resultado: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -56,7 +58,7 @@ class ResultadoController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado obtenido con exito', ['data' => $resultado]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener resultado: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al obtener resultado: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -66,13 +68,15 @@ class ResultadoController extends Controller
     public function update(UpdateResultadoRequest $request, int $id): JsonResponse
     {
         try {
-            $updated = $this->resultadoService->updateResultado($id, $request->all());
-            if (!$updated) {
-                throw new Exception('Resultado no encontrado o error al actualizar', 404);
+            $resultado = Resultado::find($id);
+            if (!$resultado) {
+                throw new Exception('Resultado no encontrado', 404);
             }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Resultado actualizado con exito', ['data' => [$updated]]);
+            $resultadoDto = ResultadoDto::fromArray($request->validated());
+            $updated = $this->resultadoService->updateResultado($resultado, $resultadoDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Resultado actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar resultado: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar resultado: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -82,13 +86,14 @@ class ResultadoController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try {
-            $deleted = $this->resultadoService->deleteResultado($id);
-            if (!$deleted) {
-                throw new Exception('Resultado no encontrado o error al eliminar', 404);
+            $resultado = Resultado::find($id);
+            if (!$resultado) {
+                throw new Exception('Resultado no encontrado', 404);
             }
+            $deleted = $this->resultadoService->deleteResultado($resultado);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado eliminado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar resultado: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar resultado: ' . $e->getMessage(), $e->getCode());
         }
     }
 }

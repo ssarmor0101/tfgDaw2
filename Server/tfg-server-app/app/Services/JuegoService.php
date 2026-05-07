@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\JuegoRepository;
 use App\DTOs\Juego\JuegoDto;
+use App\Models\Juego;
 use Illuminate\Support\Collection;
 
 class JuegoService
@@ -24,29 +25,19 @@ class JuegoService
         return $juego ? JuegoDto::fromModel($juego) : null;
     }
 
-    public function createJuego(array $data): JuegoDto
+    public function createJuego(JuegoDto $juegoDto): JuegoDto
     {
-        $juegoDto = JuegoDto::fromArray($data);
         $juego = $this->juegoRepository->create($juegoDto);
         return JuegoDto::fromModel($juego);
     }
 
-    public function updateJuego(int $id, array $data): bool
+    public function updateJuego(Juego $juego, JuegoDto $juegoDto): bool
     {
-        $juego = $this->juegoRepository->find($id);
-        if (!$juego) {
-            return false;
-        }
-        $juegoDto = JuegoDto::fromArray($data);
         return $this->juegoRepository->update($juego, $juegoDto);
     }
 
-    public function deleteJuego(int $id): bool
+    public function deleteJuego(Juego $juego): bool
     {
-        $juego = $this->juegoRepository->find($id);
-        if (!$juego) {
-            return false;
-        }
         return $this->juegoRepository->delete($juego);
     }
 }

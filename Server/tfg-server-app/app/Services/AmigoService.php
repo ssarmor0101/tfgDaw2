@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\AmigoRepository;
 use App\DTOs\Amigo\AmigoDto;
+use App\Models\Amigo;
 use Illuminate\Support\Collection;
 
 class AmigoService
@@ -29,29 +30,19 @@ class AmigoService
         return $amigo ? AmigoDto::fromModel($amigo) : null;
     }
 
-    public function createAmigo(array $data): AmigoDto
+    public function createAmigo(AmigoDto $amigoDto): AmigoDto
     {
-        $amigoDto = AmigoDto::fromArray($data);
         $amigo = $this->amigoRepository->create($amigoDto);
         return AmigoDto::fromModel($amigo);
     }
 
-    public function updateAmigo(int $id, array $data): bool
+    public function updateAmigo(Amigo $amigo, AmigoDto $amigoDto): bool
     {
-        $amigo = $this->amigoRepository->find($id);
-        if (!$amigo) {
-            return false;
-        }
-        $amigoDto = AmigoDto::fromArray($data);
         return $this->amigoRepository->update($amigo, $amigoDto);
     }
 
-    public function deleteAmigo(int $id): bool
+    public function deleteAmigo(Amigo $amigo): bool
     {
-        $amigo = $this->amigoRepository->find($id);
-        if (!$amigo) {
-            return false;
-        }
         return $this->amigoRepository->delete($amigo);
     }
 }

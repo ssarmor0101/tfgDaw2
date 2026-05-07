@@ -7,8 +7,9 @@ use App\Http\Requests\StorePuntuacionRequest;
 use App\Http\Requests\UpdatePuntuacionRequest;
 use App\Services\PuntuacionService;
 use App\Helpers\JsonResponseBuilderHelper;
+use App\Models\Puntuacion;
+use App\DTOs\Puntuacion\PuntuacionDto;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Exception;
 
 class PuntuacionController extends Controller
@@ -27,7 +28,7 @@ class PuntuacionController extends Controller
             $puntuaciones = $this->puntuacionService->getAllPuntuaciones();
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuaciones obtenidas con exito', ['data' => $puntuaciones]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener puntuaciones: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al obtener puntuaciones: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -37,10 +38,11 @@ class PuntuacionController extends Controller
     public function store(StorePuntuacionRequest $request): JsonResponse
     {
         try {
-            $puntuacion = $this->puntuacionService->createPuntuacion($request->all());
+            $puntuacionDto = PuntuacionDto::fromArray($request->validated());
+            $puntuacion = $this->puntuacionService->createPuntuacion($puntuacionDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion creada con exito', ['data' => $puntuacion]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear puntuacion: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al crear puntuacion: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -56,7 +58,7 @@ class PuntuacionController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion obtenida con exito', ['data' => $puntuacion]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener puntuacion: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al obtener puntuacion: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -66,13 +68,15 @@ class PuntuacionController extends Controller
     public function update(UpdatePuntuacionRequest $request, int $id): JsonResponse
     {
         try {
-            $updated = $this->puntuacionService->updatePuntuacion($id, $request->all());
-            if (!$updated) {
-                throw new Exception('Puntuacion no encontrada o error al actualizar', 404);
+            $puntuacion = Puntuacion::find($id);
+            if (!$puntuacion) {
+                throw new Exception('Puntuacion no encontrada', 404);
             }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion actualizada con exito', ['data' => [$updated]]);
+            $puntuacionDto = PuntuacionDto::fromArray($request->validated());
+            $updated = $this->puntuacionService->updatePuntuacion($puntuacion, $puntuacionDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion actualizada con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar puntuacion: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar puntuacion: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -82,13 +86,14 @@ class PuntuacionController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try {
-            $deleted = $this->puntuacionService->deletePuntuacion($id);
-            if (!$deleted) {
-                throw new Exception('Puntuacion no encontrada o error al eliminar', 404);
+            $puntuacion = Puntuacion::find($id);
+            if (!$puntuacion) {
+                throw new Exception('Puntuacion no encontrada', 404);
             }
+            $deleted = $this->puntuacionService->deletePuntuacion($puntuacion);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion eliminada con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar puntuacion: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar puntuacion: ' . $e->getMessage(), $e->getCode());
         }
     }
 }

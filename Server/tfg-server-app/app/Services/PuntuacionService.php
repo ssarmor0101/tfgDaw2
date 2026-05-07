@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\PuntuacionRepository;
 use App\DTOs\Puntuacion\PuntuacionDto;
+use App\Models\Puntuacion;
 use Illuminate\Support\Collection;
 
 class PuntuacionService
@@ -24,29 +25,19 @@ class PuntuacionService
         return $puntuacion ? PuntuacionDto::fromModel($puntuacion) : null;
     }
 
-    public function createPuntuacion(array $data): PuntuacionDto
+    public function createPuntuacion(PuntuacionDto $puntuacionDto): PuntuacionDto
     {
-        $puntuacionDto = PuntuacionDto::fromArray($data);
         $puntuacion = $this->puntuacionRepository->create($puntuacionDto);
         return PuntuacionDto::fromModel($puntuacion);
     }
 
-    public function updatePuntuacion(int $id, array $data): bool
+    public function updatePuntuacion(Puntuacion $puntuacion, PuntuacionDto $puntuacionDto): bool
     {
-        $puntuacion = $this->puntuacionRepository->find($id);
-        if (!$puntuacion) {
-            return false;
-        }
-        $puntuacionDto = PuntuacionDto::fromArray($data);
         return $this->puntuacionRepository->update($puntuacion, $puntuacionDto);
     }
 
-    public function deletePuntuacion(int $id): bool
+    public function deletePuntuacion(Puntuacion $puntuacion): bool
     {
-        $puntuacion = $this->puntuacionRepository->find($id);
-        if (!$puntuacion) {
-            return false;
-        }
         return $this->puntuacionRepository->delete($puntuacion);
     }
 }

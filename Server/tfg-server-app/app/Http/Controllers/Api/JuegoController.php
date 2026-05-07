@@ -7,6 +7,8 @@ use App\Http\Requests\StoreJuegoRequest;
 use App\Http\Requests\UpdateJuegoRequest;
 use App\Services\JuegoService;
 use App\Helpers\JsonResponseBuilderHelper;
+use App\Models\Juego;
+use App\DTOs\Juego\JuegoDto;
 use Illuminate\Http\JsonResponse;
 use Exception;
 
@@ -26,7 +28,7 @@ class JuegoController extends Controller
             $juegos = $this->juegoService->getAllJuegos();
             return JsonResponseBuilderHelper::buildJsonSuccess('Juegos recuperados correctamente', ['data' => $juegos]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al recuperar juegos: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al recuperar juegos: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -36,11 +38,11 @@ class JuegoController extends Controller
     public function store(StoreJuegoRequest $request): JsonResponse
     {
         try {
-            $validated = $request->validated();
-            $juego = $this->juegoService->createJuego($validated);
+            $juegoDto = JuegoDto::fromArray($request->validated());
+            $juego = $this->juegoService->createJuego($juegoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Juego creado con exito', ['data' => $juego]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear juego: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al crear juego: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -56,7 +58,7 @@ class JuegoController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('Juego recuperado correctamente', ['data' => $juego]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al recuperar juego: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al recuperar juego: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -66,15 +68,15 @@ class JuegoController extends Controller
     public function update(UpdateJuegoRequest $request, int $id): JsonResponse
     {
         try {
-            $validated = $request->validated();
-            $juegoDto = $this->juegoService->getJuegoById($id);
-            $updated = $this->juegoService->updateJuego($id, $validated);
-            if (!$updated) {
-                throw new Exception('Juego no encontrado o error al actualizar', 404);
+            $juego = Juego::find($id);
+            if (!$juego) {
+                throw new Exception('Juego no encontrado', 404);
             }
+            $juegoDto = JuegoDto::fromArray($request->validated());
+            $updated = $this->juegoService->updateJuego($juego, $juegoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Juego actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar juego: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar juego: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -84,13 +86,14 @@ class JuegoController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try {
-            $deleted = $this->juegoService->deleteJuego($id);
-            if (!$deleted) {
-                throw new Exception('Juego no encontrado o error al eliminar', 404);
+            $juego = Juego::find($id);
+            if (!$juego) {
+                throw new Exception('Juego no encontrado', 404);
             }
+            $deleted = $this->juegoService->deleteJuego($juego);
             return JsonResponseBuilderHelper::buildJsonSuccess('Juego eliminado con exito', ['data' => $deleted]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar juego: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar juego: ' . $e->getMessage(), $e->getCode());
         }
     }
 }

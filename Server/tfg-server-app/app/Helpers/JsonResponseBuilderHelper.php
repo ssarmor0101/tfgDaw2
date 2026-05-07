@@ -41,11 +41,11 @@ class JsonResponseBuilderHelper
      * Build an error JSON response.
      *
      * @param string $message
-     * @param array $payload
      * @param int $code
+     * @param array $payload
      * @return JsonResponse
      */
-    public static function buildJsonError(string $message = 'Error', array $payload = [], int $code = 500): JsonResponse
+    public static function buildJsonError(string $message = 'Error', int $code = 500, array $payload = []): JsonResponse
     {
         return self::buildJson(false, $message, $payload, $code);
     }

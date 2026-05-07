@@ -7,6 +7,8 @@ use App\Http\Requests\StoreLogroRequest;
 use App\Http\Requests\UpdateLogroRequest;
 use App\Services\LogroService;
 use App\Helpers\JsonResponseBuilderHelper;
+use App\Models\Logro;
+use App\DTOs\Logro\LogroDto;
 use Illuminate\Http\JsonResponse;
 use Exception;
 
@@ -26,7 +28,7 @@ class LogroController extends Controller
             $logros = $this->logroService->getAllLogros();
             return JsonResponseBuilderHelper::buildJsonSuccess('Logros obtenidos con exito', ['data' => $logros]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener logros: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al obtener logros: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -36,11 +38,11 @@ class LogroController extends Controller
     public function store(StoreLogroRequest $request): JsonResponse
     {
         try {
-            $validated = $request->validated();
-            $logro = $this->logroService->createLogro($validated);
+            $logroDto = LogroDto::fromArray($request->validated());
+            $logro = $this->logroService->createLogro($logroDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro creado con exito', ['data' => $logro]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear logro: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al crear logro: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -56,7 +58,7 @@ class LogroController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro obtenido con exito', ['data' => $logro]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener logro: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al obtener logro: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -66,14 +68,15 @@ class LogroController extends Controller
     public function update(UpdateLogroRequest $request, int $id): JsonResponse
     {
         try {
-            $validated = $request->validated();
-            $updated = $this->logroService->updateLogro($id, $validated);
-            if (!$updated) {
-                throw new Exception('Logro no encontrado o error al actualizar', 404);
+            $logro = Logro::find($id);
+            if (!$logro) {
+                throw new Exception('Logro no encontrado', 404);
             }
+            $logroDto = LogroDto::fromArray($request->validated());
+            $updated = $this->logroService->updateLogro($logro, $logroDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro actualizado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar logro: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar logro: ' . $e->getMessage(), $e->getCode());
         }
     }
 
@@ -83,13 +86,14 @@ class LogroController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try {
-            $deleted = $this->logroService->deleteLogro($id);
-            if (!$deleted) {
-                throw new Exception('Logro no encontrado o error al eliminar', 404);
+            $logro = Logro::find($id);
+            if (!$logro) {
+                throw new Exception('Logro no encontrado', 404);
             }
+            $deleted = $this->logroService->deleteLogro($logro);
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro eliminado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar logro: ' . $e->getMessage(), [], $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar logro: ' . $e->getMessage(), $e->getCode());
         }
     }
 }
