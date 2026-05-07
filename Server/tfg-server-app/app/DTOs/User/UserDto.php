@@ -26,6 +26,16 @@ class UserDto extends Dto
         );
     }
 
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            id: $data['id'] ?? null,
+            name: $data['name'] ?? null,
+            email: $data['email'] ?? null,
+            rol_id: $data['rol_id'] ?? null
+        );
+    }
+
     public function toArray(): array
     {
         return [

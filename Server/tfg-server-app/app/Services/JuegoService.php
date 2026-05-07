@@ -15,26 +15,38 @@ class JuegoService
 
     public function getAllJuegos(): Collection
     {
-        return $this->juegoRepository->all();
+        return JuegoDto::collection($this->juegoRepository->all());
     }
 
     public function getJuegoById(int $id): ?JuegoDto
     {
-        return $this->juegoRepository->find($id);
+        $juego = $this->juegoRepository->find($id);
+        return $juego ? JuegoDto::fromModel($juego) : null;
     }
 
     public function createJuego(array $data): JuegoDto
     {
-        return $this->juegoRepository->create($data);
+        $juegoDto = JuegoDto::fromArray($data);
+        $juego = $this->juegoRepository->create($juegoDto);
+        return JuegoDto::fromModel($juego);
     }
 
     public function updateJuego(int $id, array $data): bool
     {
-        return $this->juegoRepository->update($id, $data);
+        $juego = $this->juegoRepository->find($id);
+        if (!$juego) {
+            return false;
+        }
+        $juegoDto = JuegoDto::fromArray($data);
+        return $this->juegoRepository->update($juego, $juegoDto);
     }
 
     public function deleteJuego(int $id): bool
     {
-        return $this->juegoRepository->delete($id);
+        $juego = $this->juegoRepository->find($id);
+        if (!$juego) {
+            return false;
+        }
+        return $this->juegoRepository->delete($juego);
     }
 }

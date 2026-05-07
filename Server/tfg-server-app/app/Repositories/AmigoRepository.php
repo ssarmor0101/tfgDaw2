@@ -10,40 +10,33 @@ class AmigoRepository
 {
     public function all(): Collection
     {
-        $amigos = Amigo::with(['user', 'friend'])->get();
-        return AmigoDto::collection($amigos);
+        return Amigo::all();
     }
 
-    public function find(int $id): ?AmigoDto
+    public function find(int $id): ?Amigo
     {
-        $amigo = Amigo::with(['user', 'friend'])->find($id);
-        return $amigo ? AmigoDto::fromModel($amigo) : null;
+        return Amigo::find($id);
     }
 
-    public function create(array $data): AmigoDto
+    public function create(AmigoDto $amigoDto): Amigo
     {
-        $amigo = Amigo::create($data);
-        return AmigoDto::fromModel($amigo);
+        return Amigo::create($amigoDto->toArrayWithoutNulls());
     }
 
-    public function update(int $id, array $data): bool
+    public function update(Amigo $amigo, AmigoDto $amigoDto): bool
     {
-        $amigo = Amigo::find($id);
-        return $amigo ? $amigo->update($data) : false;
+        return $amigo->update($amigoDto->toArrayWithoutNulls());
     }
 
-    public function delete(int $id): bool
+    public function delete(Amigo $amigo): bool
     {
-        $amigo = Amigo::find($id);
-        return $amigo ? $amigo->delete() : false;
+        return $amigo->delete();
     }
 
     public function getForUser(int $userId): Collection
     {
-        $amigos = Amigo::with(['user', 'friend'])
-            ->where('user_id', $userId)
+        return Amigo::where('user_id', $userId)
             ->orWhere('friend_id', $userId)
             ->get();
-        return AmigoDto::collection($amigos);
     }
 }

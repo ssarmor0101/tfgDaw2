@@ -15,31 +15,43 @@ class AmigoService
 
     public function getAllAmigos(): Collection
     {
-        return $this->amigoRepository->all();
+        return AmigoDto::collection($this->amigoRepository->all());
     }
 
     public function getAmigosByUserId(int $userId): Collection
     {
-        return $this->amigoRepository->getForUser($userId);
+        return AmigoDto::collection($this->amigoRepository->getForUser($userId));
     }
 
     public function getAmigoById(int $id): ?AmigoDto
     {
-        return $this->amigoRepository->find($id);
+        $amigo = $this->amigoRepository->find($id);
+        return $amigo ? AmigoDto::fromModel($amigo) : null;
     }
 
     public function createAmigo(array $data): AmigoDto
     {
-        return $this->amigoRepository->create($data);
+        $amigoDto = AmigoDto::fromArray($data);
+        $amigo = $this->amigoRepository->create($amigoDto);
+        return AmigoDto::fromModel($amigo);
     }
 
     public function updateAmigo(int $id, array $data): bool
     {
-        return $this->amigoRepository->update($id, $data);
+        $amigo = $this->amigoRepository->find($id);
+        if (!$amigo) {
+            return false;
+        }
+        $amigoDto = AmigoDto::fromArray($data);
+        return $this->amigoRepository->update($amigo, $amigoDto);
     }
 
     public function deleteAmigo(int $id): bool
     {
-        return $this->amigoRepository->delete($id);
+        $amigo = $this->amigoRepository->find($id);
+        if (!$amigo) {
+            return false;
+        }
+        return $this->amigoRepository->delete($amigo);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreJuegoRequest;
+use App\Http\Requests\UpdateJuegoRequest;
 use App\Services\JuegoService;
 use App\Helpers\JsonResponseBuilderHelper;
 use Illuminate\Http\JsonResponse;
@@ -62,10 +63,11 @@ class JuegoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreJuegoRequest $request, int $id): JsonResponse
+    public function update(UpdateJuegoRequest $request, int $id): JsonResponse
     {
         try {
             $validated = $request->validated();
+            $juegoDto = $this->juegoService->getJuegoById($id);
             $updated = $this->juegoService->updateJuego($id, $validated);
             if (!$updated) {
                 throw new Exception('Juego no encontrado o error al actualizar', 404);

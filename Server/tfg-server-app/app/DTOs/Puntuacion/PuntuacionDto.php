@@ -26,6 +26,16 @@ class PuntuacionDto extends Dto
         );
     }
 
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            id: $data['id'] ?? null,
+            user_id: $data['user_id'] ?? null,
+            juego_id: $data['juego_id'] ?? null,
+            puntuacion: $data['puntuacion'] ?? null
+        );
+    }
+
     public function toArray(): array
     {
         return [

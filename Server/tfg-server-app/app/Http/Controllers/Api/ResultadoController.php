@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreResultadoRequest;
+use App\Http\Requests\UpdateResultadoRequest;
 use App\Services\ResultadoService;
 use App\Helpers\JsonResponseBuilderHelper;
 use Illuminate\Http\JsonResponse;
@@ -32,7 +34,7 @@ class ResultadoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreResultadoRequest $request): JsonResponse
     {
         try {
             $resultado = $this->resultadoService->createResultado($request->all());
@@ -61,7 +63,7 @@ class ResultadoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateResultadoRequest $request, int $id): JsonResponse
     {
         try {
             $updated = $this->resultadoService->updateResultado($id, $request->all());

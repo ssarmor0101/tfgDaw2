@@ -10,31 +10,26 @@ class JuegoRepository
 {
     public function all(): Collection
     {
-        $juegos = Juego::with(['logros', 'puntuaciones'])->get();
-        return JuegoDto::collection($juegos);
+        return Juego::all();
     }
 
-    public function find(int $id): ?JuegoDto
+    public function find(int $id): ?Juego
     {
-        $juego = Juego::with(['logros', 'puntuaciones'])->find($id);
-        return $juego ? JuegoDto::fromModel($juego) : null;
+        return Juego::find($id);
     }
 
-    public function create(array $data): JuegoDto
+    public function create(JuegoDto $juegoDto): Juego
     {
-        $juego = Juego::create($data);
-        return JuegoDto::fromModel($juego);
+        return Juego::create($juegoDto->toArrayWithoutNulls());
     }
 
-    public function update(int $id, array $data): bool
+    public function update(Juego $juego, JuegoDto $juegoDto): bool
     {
-        $juego = Juego::find($id);
-        return $juego ? $juego->update($data) : false;
+        return $juego->update($juegoDto->toArrayWithoutNulls());
     }
 
-    public function delete(int $id): bool
+    public function delete(Juego $juego): bool
     {
-        $juego = Juego::find($id);
-        return $juego ? $juego->delete() : false;
+        return $juego->delete();
     }
 }

@@ -10,31 +10,26 @@ class ResultadoRepository
 {
     public function all(): Collection
     {
-        $resultados = Resultado::with(['user', 'logro'])->get();
-        return ResultadoDto::collection($resultados);
+        return Resultado::all();
     }
 
-    public function find(int $id): ?ResultadoDto
+    public function find(int $id): ?Resultado
     {
-        $resultado = Resultado::with(['user', 'logro'])->find($id);
-        return $resultado ? ResultadoDto::fromModel($resultado) : null;
+        return Resultado::find($id);
     }
 
-    public function create(array $data): ResultadoDto
+    public function create(ResultadoDto $resultadoDto): Resultado
     {
-        $resultado = Resultado::create($data);
-        return ResultadoDto::fromModel($resultado);
+        return Resultado::create($resultadoDto->toArrayWithoutNulls());
     }
 
-    public function update(int $id, array $data): bool
+    public function update(Resultado $resultado, ResultadoDto $resultadoDto): bool
     {
-        $resultado = Resultado::find($id);
-        return $resultado ? $resultado->update($data) : false;
+        return $resultado->update($resultadoDto->toArrayWithoutNulls());
     }
 
-    public function delete(int $id): bool
+    public function delete(Resultado $resultado): bool
     {
-        $resultado = Resultado::find($id);
-        return $resultado ? $resultado->delete() : false;
+        return $resultado->delete();
     }
 }

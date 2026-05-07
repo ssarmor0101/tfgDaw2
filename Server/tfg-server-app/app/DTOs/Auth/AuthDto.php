@@ -20,6 +20,14 @@ class AuthDto extends Dto
         );
     }
 
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            token: $data['token'] ?? null,
+            user: $data['user'] ?? null,
+        );
+    }
+
     public function toArray(): array
     {
         return [

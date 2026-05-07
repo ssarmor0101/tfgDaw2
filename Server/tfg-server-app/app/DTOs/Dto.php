@@ -42,4 +42,12 @@ abstract class Dto
      * @return static
      */
     abstract public static function fromModel($item): self;
+
+    /**
+     * Map an array to a DTO.
+     *
+     * @param array $data
+     * @return static
+     */
+    abstract public static function fromArray(array $data): self;
 }

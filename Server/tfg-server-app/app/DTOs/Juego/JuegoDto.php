@@ -24,6 +24,15 @@ class JuegoDto extends Dto
         );
     }
 
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            id: $data['id'] ?? null,
+            name: $data['name'] ?? null,
+            description: $data['description'] ?? null
+        );
+    }
+
     public function toArray(): array
     {
         return [

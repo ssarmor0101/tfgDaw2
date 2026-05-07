@@ -24,6 +24,15 @@ class AmigoDto extends Dto
         );
     }
 
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            id: $data['id'] ?? null,
+            user_id: $data['user_id'] ?? null,
+            friend_id: $data['friend_id'] ?? null
+        );
+    }
+
     public function toArray(): array
     {
         return [

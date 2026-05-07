@@ -26,6 +26,16 @@ class LogroDto extends Dto
         );
     }
 
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            id: $data['id'] ?? null,
+            name: $data['name'] ?? null,
+            description: $data['description'] ?? null,
+            juego_id: $data['juego_id'] ?? null
+        );
+    }
+
     public function toArray(): array
     {
         return [

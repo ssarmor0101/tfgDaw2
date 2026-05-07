@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\User\UserDto;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Services\UserService;
 use App\Helpers\JsonResponseBuilderHelper;
 use Illuminate\Http\JsonResponse;
@@ -32,7 +35,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreUserRequest $request): JsonResponse
     {
         try {
             $user = $this->userService->createUser($request->all());
@@ -61,10 +64,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateUserRequest $request, int $id): JsonResponse
     {
         try {
-            $updated = $this->userService->updateUser($id, $request->all());
+            $userDto = UserDto::fromArray($request->validated());
+            $updated = $this->userService->updateUser($id, $userDto->toArray());
             if (!$updated) {
                 throw new Exception('User not found or update failed', 404);
             }

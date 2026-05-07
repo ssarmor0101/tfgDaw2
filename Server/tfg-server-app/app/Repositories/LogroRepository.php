@@ -10,31 +10,26 @@ class LogroRepository
 {
     public function all(): Collection
     {
-        $logros = Logro::with(['juego', 'resultados'])->get();
-        return LogroDto::collection($logros);
+        return Logro::all();
     }
 
-    public function find(int $id): ?LogroDto
+    public function find(int $id): ?Logro
     {
-        $logro = Logro::with(['juego', 'resultados'])->find($id);
-        return $logro ? LogroDto::fromModel($logro) : null;
+        return Logro::find($id);
     }
 
-    public function create(array $data): LogroDto
+    public function create(LogroDto $logroDto): Logro
     {
-        $logro = Logro::create($data);
-        return LogroDto::fromModel($logro);
+        return Logro::create($logroDto->toArrayWithoutNulls());
     }
 
-    public function update(int $id, array $data): bool
+    public function update(Logro $logro, LogroDto $logroDto): bool
     {
-        $logro = Logro::find($id);
-        return $logro ? $logro->update($data) : false;
+        return $logro->update($logroDto->toArrayWithoutNulls());
     }
 
-    public function delete(int $id): bool
+    public function delete(Logro $logro): bool
     {
-        $logro = Logro::find($id);
-        return $logro ? $logro->delete() : false;
+        return $logro->delete();
     }
 }

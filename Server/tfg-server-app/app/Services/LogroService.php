@@ -15,26 +15,38 @@ class LogroService
 
     public function getAllLogros(): Collection
     {
-        return $this->logroRepository->all();
+        return LogroDto::collection($this->logroRepository->all());
     }
 
     public function getLogroById(int $id): ?LogroDto
     {
-        return $this->logroRepository->find($id);
+        $logro = $this->logroRepository->find($id);
+        return $logro ? LogroDto::fromModel($logro) : null;
     }
 
     public function createLogro(array $data): LogroDto
     {
-        return $this->logroRepository->create($data);
+        $logroDto = LogroDto::fromArray($data);
+        $logro = $this->logroRepository->create($logroDto);
+        return LogroDto::fromModel($logro);
     }
 
     public function updateLogro(int $id, array $data): bool
     {
-        return $this->logroRepository->update($id, $data);
+        $logro = $this->logroRepository->find($id);
+        if (!$logro) {
+            return false;
+        }
+        $logroDto = LogroDto::fromArray($data);
+        return $this->logroRepository->update($logro, $logroDto);
     }
 
     public function deleteLogro(int $id): bool
     {
-        return $this->logroRepository->delete($id);
+        $logro = $this->logroRepository->find($id);
+        if (!$logro) {
+            return false;
+        }
+        return $this->logroRepository->delete($logro);
     }
 }

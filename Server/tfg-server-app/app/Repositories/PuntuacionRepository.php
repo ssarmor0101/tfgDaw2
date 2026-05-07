@@ -10,31 +10,26 @@ class PuntuacionRepository
 {
     public function all(): Collection
     {
-        $puntuaciones = Puntuacion::with(['user', 'juego'])->get();
-        return PuntuacionDto::collection($puntuaciones);
+        return Puntuacion::all();
     }
 
-    public function find(int $id): ?PuntuacionDto
+    public function find(int $id): ?Puntuacion
     {
-        $puntuacion = Puntuacion::with(['user', 'juego'])->find($id);
-        return $puntuacion ? PuntuacionDto::fromModel($puntuacion) : null;
+        return Puntuacion::find($id);
     }
 
-    public function create(array $data): PuntuacionDto
+    public function create(PuntuacionDto $puntuacionDto): Puntuacion
     {
-        $puntuacion = Puntuacion::create($data);
-        return PuntuacionDto::fromModel($puntuacion);
+        return Puntuacion::create($puntuacionDto->toArrayWithoutNulls());
     }
 
-    public function update(int $id, array $data): bool
+    public function update(Puntuacion $puntuacion, PuntuacionDto $puntuacionDto): bool
     {
-        $puntuacion = Puntuacion::find($id);
-        return $puntuacion ? $puntuacion->update($data) : false;
+        return $puntuacion->update($puntuacionDto->toArrayWithoutNulls());
     }
 
-    public function delete(int $id): bool
+    public function delete(Puntuacion $puntuacion): bool
     {
-        $puntuacion = Puntuacion::find($id);
-        return $puntuacion ? $puntuacion->delete() : false;
+        return $puntuacion->delete();
     }
 }

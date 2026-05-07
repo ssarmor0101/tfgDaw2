@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLogroRequest;
+use App\Http\Requests\UpdateLogroRequest;
 use App\Services\LogroService;
 use App\Helpers\JsonResponseBuilderHelper;
 use Illuminate\Http\JsonResponse;
@@ -62,7 +63,7 @@ class LogroController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreLogroRequest $request, int $id): JsonResponse
+    public function update(UpdateLogroRequest $request, int $id): JsonResponse
     {
         try {
             $validated = $request->validated();

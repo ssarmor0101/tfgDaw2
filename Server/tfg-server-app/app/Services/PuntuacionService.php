@@ -15,26 +15,38 @@ class PuntuacionService
 
     public function getAllPuntuaciones(): Collection
     {
-        return $this->puntuacionRepository->all();
+        return PuntuacionDto::collection($this->puntuacionRepository->all());
     }
 
     public function getPuntuacionById(int $id): ?PuntuacionDto
     {
-        return $this->puntuacionRepository->find($id);
+        $puntuacion = $this->puntuacionRepository->find($id);
+        return $puntuacion ? PuntuacionDto::fromModel($puntuacion) : null;
     }
 
     public function createPuntuacion(array $data): PuntuacionDto
     {
-        return $this->puntuacionRepository->create($data);
+        $puntuacionDto = PuntuacionDto::fromArray($data);
+        $puntuacion = $this->puntuacionRepository->create($puntuacionDto);
+        return PuntuacionDto::fromModel($puntuacion);
     }
 
     public function updatePuntuacion(int $id, array $data): bool
     {
-        return $this->puntuacionRepository->update($id, $data);
+        $puntuacion = $this->puntuacionRepository->find($id);
+        if (!$puntuacion) {
+            return false;
+        }
+        $puntuacionDto = PuntuacionDto::fromArray($data);
+        return $this->puntuacionRepository->update($puntuacion, $puntuacionDto);
     }
 
     public function deletePuntuacion(int $id): bool
     {
-        return $this->puntuacionRepository->delete($id);
+        $puntuacion = $this->puntuacionRepository->find($id);
+        if (!$puntuacion) {
+            return false;
+        }
+        return $this->puntuacionRepository->delete($puntuacion);
     }
 }

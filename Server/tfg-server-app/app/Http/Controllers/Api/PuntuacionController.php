@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePuntuacionRequest;
+use App\Http\Requests\UpdatePuntuacionRequest;
 use App\Services\PuntuacionService;
 use App\Helpers\JsonResponseBuilderHelper;
 use Illuminate\Http\JsonResponse;
@@ -32,7 +34,7 @@ class PuntuacionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StorePuntuacionRequest $request): JsonResponse
     {
         try {
             $puntuacion = $this->puntuacionService->createPuntuacion($request->all());
@@ -61,7 +63,7 @@ class PuntuacionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdatePuntuacionRequest $request, int $id): JsonResponse
     {
         try {
             $updated = $this->puntuacionService->updatePuntuacion($id, $request->all());

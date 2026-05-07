@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Repositories\UserRepository;
 use App\DTOs\User\UserDto;
 use Illuminate\Support\Collection;
@@ -15,26 +16,38 @@ class UserService
 
     public function getAllUsers(): Collection
     {
-        return $this->userRepository->all();
+        return UserDto::collection($this->userRepository->all());
     }
 
     public function getUserById(int $id): ?UserDto
     {
-        return $this->userRepository->find($id);
+        $user = $this->userRepository->find($id);
+        return $user ? UserDto::fromModel($user) : null;
     }
 
     public function createUser(array $data): UserDto
     {
-        return $this->userRepository->create($data);
+        $userDto = UserDto::fromArray($data);
+        $user = $this->userRepository->create($userDto);
+        return UserDto::fromModel($user);
     }
 
     public function updateUser(int $id, array $data): bool
     {
-        return $this->userRepository->update($id, $data);
+        $user = $this->userRepository->find($id);
+        if (!$user) {
+            return false;
+        }
+        $userDto = UserDto::fromArray($data);
+        return $this->userRepository->update($user, $userDto);
     }
 
     public function deleteUser(int $id): bool
     {
-        return $this->userRepository->delete($id);
+        $user = $this->userRepository->find($id);
+        if (!$user) {
+            return false;
+        }
+        return $this->userRepository->delete($user);
     }
 }
