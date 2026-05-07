@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\PuntuacionRepository;
 use App\DTOs\Puntuacion\PuntuacionDto;
+use App\DTOs\User\UserDto;
 use App\Models\Puntuacion;
 use Illuminate\Support\Collection;
 
@@ -39,5 +40,10 @@ class PuntuacionService
     public function deletePuntuacion(Puntuacion $puntuacion): bool
     {
         return $this->puntuacionRepository->delete($puntuacion);
+    }
+
+    public function getPuntuacionesByUserId(UserDto $userDto): Collection
+    {
+        return PuntuacionDto::collection($this->puntuacionRepository->getByUserId($userDto));
     }
 }
