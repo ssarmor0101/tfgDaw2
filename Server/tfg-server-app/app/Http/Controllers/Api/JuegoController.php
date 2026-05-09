@@ -49,14 +49,11 @@ class JuegoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(Juego $juego): JsonResponse
     {
         try {
-            $juego = $this->juegoService->getJuegoById($id);
-            if (!$juego) {
-                throw new Exception('Juego no encontrado', 404);
-            }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Juego recuperado correctamente', ['data' => $juego]);
+            $juegoDto = JuegoDto::fromModel($juego);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Juego recuperado correctamente', ['data' => $juegoDto]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -65,13 +62,9 @@ class JuegoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateJuegoRequest $request, int $id): JsonResponse
+    public function update(UpdateJuegoRequest $request, Juego $juego): JsonResponse
     {
         try {
-            $juego = Juego::find($id);
-            if (!$juego) {
-                throw new Exception('Juego no encontrado', 404);
-            }
             $juegoDto = JuegoDto::fromArray($request->validated());
             $updated = $this->juegoService->updateJuego($juego, $juegoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Juego actualizado con exito', ['data' => $updated]);
@@ -83,15 +76,11 @@ class JuegoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Juego $juego): JsonResponse
     {
         try {
-            $juego = Juego::find($id);
-            if (!$juego) {
-                throw new Exception('Juego no encontrado', 404);
-            }
             $deleted = $this->juegoService->deleteJuego($juego);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Juego eliminado con exito', ['data' => $deleted]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Juego eliminado con exito');
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }

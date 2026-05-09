@@ -49,14 +49,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(User $user): JsonResponse
     {
         try {
-            $user = $this->userService->getUserById($id);
-            if (!$user) {
-                throw new Exception('User not found', 404);
-            }
-            return JsonResponseBuilderHelper::buildJsonSuccess('User retrieved successfully', ['data' => $user]);
+            $userDto = UserDto::fromModel($user);
+            return JsonResponseBuilderHelper::buildJsonSuccess('User retrieved successfully', ['data' => $userDto]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -65,13 +62,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, int $id): JsonResponse
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         try {
-            $user = User::find($id);
-            if (!$user) {
-                throw new Exception('User not found', 404);
-            }
             $userDto = UserDto::fromArray($request->validated());
             $updated = $this->userService->updateUser($user, $userDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('User actualizado con exito', ['data' => $updated]);
@@ -83,13 +76,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(User $user): JsonResponse
     {
         try {
-            $user = User::find($id);
-            if (!$user) {
-                throw new Exception('User not found', 404);
-            }
             $deleted = $this->userService->deleteUser($user);
             return JsonResponseBuilderHelper::buildJsonSuccess('User eliminado con exito');
         } catch (Exception $e) {

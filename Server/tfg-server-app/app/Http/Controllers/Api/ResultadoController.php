@@ -52,14 +52,11 @@ class ResultadoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(Resultado $resultado): JsonResponse
     {
         try {
-            $resultado = $this->resultadoService->getResultadoById($id);
-            if (!$resultado) {
-                throw new Exception('Resultado no encontrado', 404);
-            }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Resultado obtenido con exito', ['data' => $resultado]);
+            $resultadoDto = ResultadoDto::fromModel($resultado);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Resultado obtenido con exito', ['data' => $resultadoDto]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -68,13 +65,9 @@ class ResultadoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateResultadoRequest $request, int $id): JsonResponse
+    public function update(UpdateResultadoRequest $request, Resultado $resultado): JsonResponse
     {
         try {
-            $resultado = Resultado::find($id);
-            if (!$resultado) {
-                throw new Exception('Resultado no encontrado', 404);
-            }
             $resultadoDto = ResultadoDto::fromArray($request->validated());
             $updated = $this->resultadoService->updateResultado($resultado, $resultadoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado actualizado con exito', ['data' => $updated]);
@@ -102,13 +95,9 @@ class ResultadoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Resultado $resultado): JsonResponse
     {
         try {
-            $resultado = Resultado::find($id);
-            if (!$resultado) {
-                throw new Exception('Resultado no encontrado', 404);
-            }
             $deleted = $this->resultadoService->deleteResultado($resultado);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado eliminado con exito');
         } catch (Exception $e) {

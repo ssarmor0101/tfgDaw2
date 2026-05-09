@@ -52,14 +52,11 @@ class PuntuacionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(Puntuacion $puntuacion): JsonResponse
     {
         try {
-            $puntuacion = $this->puntuacionService->getPuntuacionById($id);
-            if (!$puntuacion) {
-                throw new Exception('Puntuacion no encontrada', 404);
-            }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion obtenida con exito', ['data' => $puntuacion]);
+            $puntuacionDto = PuntuacionDto::fromModel($puntuacion);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion obtenida con exito', ['data' => $puntuacionDto]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -68,13 +65,9 @@ class PuntuacionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePuntuacionRequest $request, int $id): JsonResponse
+    public function update(UpdatePuntuacionRequest $request, Puntuacion $puntuacion): JsonResponse
     {
         try {
-            $puntuacion = Puntuacion::find($id);
-            if (!$puntuacion) {
-                throw new Exception('Puntuacion no encontrada', 404);
-            }
             $puntuacionDto = PuntuacionDto::fromArray($request->validated());
             $updated = $this->puntuacionService->updatePuntuacion($puntuacion, $puntuacionDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion actualizada con exito', ['data' => $updated]);
@@ -104,13 +97,9 @@ class PuntuacionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Puntuacion $puntuacion): JsonResponse
     {
         try {
-            $puntuacion = Puntuacion::find($id);
-            if (!$puntuacion) {
-                throw new Exception('Puntuacion no encontrada', 404);
-            }
             $deleted = $this->puntuacionService->deletePuntuacion($puntuacion);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion eliminada con exito');
         } catch (Exception $e) {

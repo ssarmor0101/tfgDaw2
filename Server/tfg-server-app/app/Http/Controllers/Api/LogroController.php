@@ -49,14 +49,11 @@ class LogroController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(Logro $logro): JsonResponse
     {
         try {
-            $logro = $this->logroService->getLogroById($id);
-            if (!$logro) {
-                throw new Exception('Logro no encontrado', 404);
-            }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Logro obtenido con exito', ['data' => $logro]);
+            $logroDto = LogroDto::fromModel($logro);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Logro obtenido con exito', ['data' => $logroDto]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -65,16 +62,12 @@ class LogroController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLogroRequest $request, int $id): JsonResponse
+    public function update(UpdateLogroRequest $request, Logro $logro): JsonResponse
     {
         try {
-            $logro = Logro::find($id);
-            if (!$logro) {
-                throw new Exception('Logro no encontrado', 404);
-            }
             $logroDto = LogroDto::fromArray($request->validated());
             $updated = $this->logroService->updateLogro($logro, $logroDto);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Logro actualizado con exito');
+            return JsonResponseBuilderHelper::buildJsonSuccess('Logro actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -83,14 +76,10 @@ class LogroController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Logro $logro): JsonResponse
     {
         try {
-            $logro = Logro::find($id);
-            if (!$logro) {
-                throw new Exception('Logro no encontrado', 404);
-            }
-            $deleted = $this->logroService->deleteLogro($logro);
+            $this->logroService->deleteLogro($logro);
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro eliminado con exito');
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());

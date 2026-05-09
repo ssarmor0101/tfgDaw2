@@ -34,7 +34,7 @@ class AmigoController extends Controller
         try {
             $user = Auth::user();
             $amigos = $user->isAdmin() ? $this->amigoService->getAllAmigos() : $this->amigoService->getAmigosByUserId($user->id);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigos recibidos correctamente', ['data' => $amigos]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistades recibidas correctamente', ['data' => $amigos]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -48,7 +48,7 @@ class AmigoController extends Controller
         try {
             $amigoDto = AmigoDto::fromArray($request->validated());
             $amigo = $this->amigoService->createAmigo($amigoDto);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigo creado con exito', ['data' => $amigo]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad creada con exito', ['data' => $amigo]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -57,14 +57,11 @@ class AmigoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(Amigo $amigo): JsonResponse
     {
         try {
-            $amigo = $this->amigoService->getAmigoById($id);
-            if (!$amigo) {
-                throw new Exception('Amigo no encontrado', 404);
-            }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigo recibido correctamente', ['data' => $amigo]);
+            $amigoDto = AmigoDto::fromModel($amigo);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad recibida correctamente', ['data' => $amigoDto]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -73,16 +70,12 @@ class AmigoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAmigoRequest $request, int $id): JsonResponse
+    public function update(UpdateAmigoRequest $request, Amigo $amigo): JsonResponse
     {
         try {
-            $amigo = Amigo::find($id);
-            if (!$amigo) {
-                throw new Exception('Amigo no encontrado', 404);
-            }
             $amigoDto = AmigoDto::fromArray($request->validated());
             $updated = $this->amigoService->updateAmigo($amigo, $amigoDto);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigo actualizado con exito', ['data' => $updated]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad actualizada con exito', ['data' => $updated]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -91,15 +84,11 @@ class AmigoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Amigo $amigo): JsonResponse
     {
         try {
-            $amigo = Amigo::find($id);
-            if (!$amigo) {
-                throw new Exception('Amigo no encontrado', 404);
-            }
             $deleted = $this->amigoService->deleteAmigo($amigo);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigo eliminado correctamente');
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad eliminada correctamente');
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
@@ -121,7 +110,7 @@ class AmigoController extends Controller
                 friend_id: $userB->id,
             );
             $amigo = $this->amigoService->createAmigo($amigoDto);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Solicitud enviada correctamente', ['data' => $amigo]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Solicitud de amistad enviada correctamente', ['data' => $amigo]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
