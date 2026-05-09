@@ -8,10 +8,10 @@ use App\Models\User;
 class UserDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?string $name,
-        public ?string $email,
-        public ?int $rol_id
+        public ?int $id = null,
+        public ?string $name = null,
+        public ?string $email = null,
+        public ?int $rol_id = null
     ) {
     }
 

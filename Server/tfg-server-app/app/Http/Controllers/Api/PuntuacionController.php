@@ -9,7 +9,9 @@ use App\Services\PuntuacionService;
 use App\Helpers\JsonResponseBuilderHelper;
 use App\Models\Puntuacion;
 use App\DTOs\Puntuacion\PuntuacionDto;
+use App\DTOs\User\UserDto;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 
 class PuntuacionController extends Controller
@@ -77,6 +79,24 @@ class PuntuacionController extends Controller
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion actualizada con exito', ['data' => $updated]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError('Error al actualizar puntuacion: ' . $e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Obtener las puntuaciones del usuario autenticado.
+     */
+    public function getMyPuntuaciones(): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                throw new Exception('Usuario no autenticado', 401);
+            }
+            $userDto = new UserDto(id: $user->id);
+            $puntuaciones = $this->puntuacionService->getPuntuacionesByUserId($userDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Puntuaciones obtenidas con exito', ['data' => $puntuaciones]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError('Error al obtener puntuaciones: ' . $e->getMessage(), $e->getCode());
         }
     }
 

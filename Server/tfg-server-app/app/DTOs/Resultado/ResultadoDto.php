@@ -8,9 +8,9 @@ use App\Models\Resultado;
 class ResultadoDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?int $user_id,
-        public ?int $logro_id
+        public ?int $id = null,
+        public ?int $user_id = null,
+        public ?int $logro_id = null
     ) {
     }
 

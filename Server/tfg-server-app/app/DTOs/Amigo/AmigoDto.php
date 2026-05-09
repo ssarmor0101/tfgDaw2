@@ -8,9 +8,9 @@ use App\Models\Amigo;
 class AmigoDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?int $user_id,
-        public ?int $friend_id
+        public ?int $id = null,
+        public ?int $user_id = null,
+        public ?int $friend_id = null
     ) {
     }
 
