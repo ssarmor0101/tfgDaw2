@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePuntuacionRequest;
 use App\Http\Requests\UpdatePuntuacionRequest;
+use App\Models\User;
 use App\Services\PuntuacionService;
 use App\Helpers\JsonResponseBuilderHelper;
 use App\Models\Puntuacion;
@@ -83,12 +84,12 @@ class PuntuacionController extends Controller
     }
 
     /**
-     * Obtener las puntuaciones del usuario autenticado.
+     * Obtener las puntuaciones de un usuario.
      */
-    public function getMyPuntuaciones(): JsonResponse
+    public function getPuntuacionesByUserId(?User $user = null): JsonResponse
     {
         try {
-            $user = Auth::user();
+            $user ??= Auth::user();
             if (!$user) {
                 throw new Exception('Usuario no autenticado', 401);
             }
