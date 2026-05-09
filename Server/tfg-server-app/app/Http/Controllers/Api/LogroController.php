@@ -28,7 +28,7 @@ class LogroController extends Controller
             $logros = $this->logroService->getAllLogros();
             return JsonResponseBuilderHelper::buildJsonSuccess('Logros obtenidos con exito', ['data' => $logros]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener logros: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -42,7 +42,7 @@ class LogroController extends Controller
             $logro = $this->logroService->createLogro($logroDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro creado con exito', ['data' => $logro]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear logro: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -58,7 +58,7 @@ class LogroController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro obtenido con exito', ['data' => $logro]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener logro: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -76,7 +76,7 @@ class LogroController extends Controller
             $updated = $this->logroService->updateLogro($logro, $logroDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro actualizado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar logro: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -93,7 +93,7 @@ class LogroController extends Controller
             $deleted = $this->logroService->deleteLogro($logro);
             return JsonResponseBuilderHelper::buildJsonSuccess('Logro eliminado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar logro: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 }

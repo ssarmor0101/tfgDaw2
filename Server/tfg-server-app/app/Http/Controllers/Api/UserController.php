@@ -28,7 +28,7 @@ class UserController extends Controller
             $users = $this->userService->getAllUsers();
             return JsonResponseBuilderHelper::buildJsonSuccess('Users retrieved successfully', ['data' => $users]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Failed to retrieve users: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -42,7 +42,7 @@ class UserController extends Controller
             $user = $this->userService->createUser($userDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('User creado con exito', ['data' => $user]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear user: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -58,7 +58,7 @@ class UserController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('User retrieved successfully', ['data' => $user]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error retrieving user: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -76,7 +76,7 @@ class UserController extends Controller
             $updated = $this->userService->updateUser($user, $userDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('User actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar user: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -93,7 +93,7 @@ class UserController extends Controller
             $deleted = $this->userService->deleteUser($user);
             return JsonResponseBuilderHelper::buildJsonSuccess('User eliminado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar user: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 }

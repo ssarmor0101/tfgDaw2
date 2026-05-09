@@ -31,7 +31,7 @@ class ResultadoController extends Controller
             $resultados = $this->resultadoService->getAllResultados();
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultados obtenidos con exito', ['data' => $resultados]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener resultados: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -45,7 +45,7 @@ class ResultadoController extends Controller
             $resultado = $this->resultadoService->createResultado($resultadoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado creado con exito', ['data' => $resultado]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear resultado: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -61,7 +61,7 @@ class ResultadoController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado obtenido con exito', ['data' => $resultado]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener resultado: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -79,7 +79,7 @@ class ResultadoController extends Controller
             $updated = $this->resultadoService->updateResultado($resultado, $resultadoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar resultado: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -95,7 +95,7 @@ class ResultadoController extends Controller
             $resultados = $this->resultadoService->getResultadosByUserId($userDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultados obtenidos con exito', ['data' => $resultados]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener resultados: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -112,7 +112,7 @@ class ResultadoController extends Controller
             $deleted = $this->resultadoService->deleteResultado($resultado);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado eliminado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar resultado: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 }

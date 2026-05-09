@@ -36,7 +36,7 @@ class AuthController extends Controller
 
             return JsonResponseBuilderHelper::buildJsonSuccess('Inicio de sesion exitoso', ['data' => $authDto]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error durante el login: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -59,7 +59,7 @@ class AuthController extends Controller
             return JsonResponseBuilderHelper::buildJsonSuccess('Registro exitoso', ['data' => $user]);
         } catch (Exception $e) {
             $code = $e->getCode() ?: 400;
-            return JsonResponseBuilderHelper::buildJsonError('Error durante el registro: ' . $e->getMessage(), $code);
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $code);
         }
     }
 
@@ -72,7 +72,7 @@ class AuthController extends Controller
             $this->authService->logout();
             return JsonResponseBuilderHelper::buildJsonSuccess('Cierre de sesion exitoso', []);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error durante el cierre de sesion: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 }

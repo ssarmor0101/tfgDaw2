@@ -31,7 +31,7 @@ class PuntuacionController extends Controller
             $puntuaciones = $this->puntuacionService->getAllPuntuaciones();
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuaciones obtenidas con exito', ['data' => $puntuaciones]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener puntuaciones: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -45,7 +45,7 @@ class PuntuacionController extends Controller
             $puntuacion = $this->puntuacionService->createPuntuacion($puntuacionDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion creada con exito', ['data' => $puntuacion]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear puntuacion: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -61,7 +61,7 @@ class PuntuacionController extends Controller
             }
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion obtenida con exito', ['data' => $puntuacion]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener puntuacion: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -79,7 +79,7 @@ class PuntuacionController extends Controller
             $updated = $this->puntuacionService->updatePuntuacion($puntuacion, $puntuacionDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion actualizada con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar puntuacion: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -97,7 +97,7 @@ class PuntuacionController extends Controller
             $puntuaciones = $this->puntuacionService->getPuntuacionesByUserId($userDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuaciones obtenidas con exito', ['data' => $puntuaciones]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al obtener puntuaciones: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -114,7 +114,7 @@ class PuntuacionController extends Controller
             $deleted = $this->puntuacionService->deletePuntuacion($puntuacion);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuacion eliminada con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar puntuacion: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 }
