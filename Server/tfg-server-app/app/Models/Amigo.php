@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\DTOs\User\UserDto;
+use App\Helpers\AmigoHelper;
 use Database\Factories\AmigoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -60,7 +61,7 @@ class Amigo extends Model
     {
         $currentUser = $this->user;
         $currentUserDto = UserDto::fromModel($currentUser);
-        [$currentUserDto, $user] = self::orderPair($currentUserDto, $user);
+        [$currentUserDto, $user] = AmigoHelper::orderUsersPairForAmigo($currentUserDto, $user);
         $friend = self::where('user_id', $currentUserDto->id)->where('friend_id', $user->id)->first();
         return $friend != null && $friend->is_friend;
     }
@@ -70,14 +71,7 @@ class Amigo extends Model
      */
     public static function pairExists(UserDto $user, UserDto $friend): bool
     {
-        [$a, $b] = self::orderPair($user, $friend);
+        [$a, $b] = AmigoHelper::orderUsersPairForAmigo($user, $friend);
         return self::where('user_id', $a->id)->where('friend_id', $b->id)->exists();
-    }
-
-    public static function orderPair(UserDto $user, UserDto $friend): array
-    {
-        if ($user->id > $friend->id)
-            return [$friend, $user];
-        return [$user, $friend];
     }
 }

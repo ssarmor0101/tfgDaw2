@@ -32,4 +32,9 @@ class UserRepository
     {
         return $user->delete();
     }
+
+    public function findByName(string $name): ?User
+    {
+        return User::where('name', $name)->first();
+    }
 }
