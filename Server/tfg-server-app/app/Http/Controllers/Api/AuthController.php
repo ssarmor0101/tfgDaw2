@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\DTOs\User\UserDto;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Services\AuthService;
 use App\Helpers\JsonResponseBuilderHelper;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Exception;
 
 class AuthController extends Controller
