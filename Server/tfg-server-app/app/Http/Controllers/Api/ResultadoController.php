@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\User\UserDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreResultadoRequest;
 use App\Http\Requests\UpdateResultadoRequest;
+use App\Models\User;
 use App\Services\ResultadoService;
 use App\Helpers\JsonResponseBuilderHelper;
 use App\Models\Resultado;
 use App\DTOs\Resultado\ResultadoDto;
+use Auth;
 use Illuminate\Http\JsonResponse;
 use Exception;
 
@@ -77,6 +80,22 @@ class ResultadoController extends Controller
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultado actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError('Error al actualizar resultado: ' . $e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Obtener los resultados de un usuario.
+     */
+    public function getResultadosByUserId(?User $user = null): JsonResponse
+    {
+        try {
+            $user ??= Auth::user();
+            throw_if(!$user, fn() => new Exception('Usuario no autenticado', 401));
+            $userDto = new UserDto(id: $user->id);
+            $resultados = $this->resultadoService->getResultadosByUserId($userDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Resultados obtenidos con exito', ['data' => $resultados]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError('Error al obtener resultados: ' . $e->getMessage(), $e->getCode());
         }
     }
 

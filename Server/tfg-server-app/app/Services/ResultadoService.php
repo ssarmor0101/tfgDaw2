@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\User\UserDto;
 use App\Repositories\ResultadoRepository;
 use App\DTOs\Resultado\ResultadoDto;
 use App\Models\Resultado;
@@ -39,5 +40,10 @@ class ResultadoService
     public function deleteResultado(Resultado $resultado): bool
     {
         return $this->resultadoRepository->delete($resultado);
+    }
+
+    public function getResultadosByUserId(UserDto $userDto): Collection
+    {
+        return ResultadoDto::collection($this->resultadoRepository->getByUserId($userDto));
     }
 }
