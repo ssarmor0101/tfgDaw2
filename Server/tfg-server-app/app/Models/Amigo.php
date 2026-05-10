@@ -57,15 +57,6 @@ class Amigo extends Model
         return $this->belongsTo(User::class, 'friend_id');
     }
 
-    public function isFriend(UserDto $user): bool
-    {
-        $currentUser = $this->user;
-        $currentUserDto = UserDto::fromModel($currentUser);
-        [$currentUserDto, $user] = AmigoHelper::orderUsersPairForAmigo($currentUserDto, $user);
-        $friend = self::where('user_id', $currentUserDto->id)->where('friend_id', $user->id)->first();
-        return $friend != null && $friend->is_friend;
-    }
-
     /**
      * Check whether unordered pair exists (returns bool).
      */

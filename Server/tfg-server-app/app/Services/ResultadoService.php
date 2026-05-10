@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\Juego\JuegoDto;
 use App\DTOs\User\UserDto;
 use App\Repositories\ResultadoRepository;
 use App\DTOs\Resultado\ResultadoDto;
@@ -45,5 +46,10 @@ class ResultadoService
     public function getResultadosByUserId(UserDto $userDto): Collection
     {
         return ResultadoDto::collection($this->resultadoRepository->getByUserId($userDto));
+    }
+
+    public function getResultadosByUserIdJuegoId(UserDto $userDto, JuegoDto $juegoDto): Collection
+    {
+        return ResultadoDto::collection($this->resultadoRepository->getByUserIdJuegoId($userDto, $juegoDto));
     }
 }

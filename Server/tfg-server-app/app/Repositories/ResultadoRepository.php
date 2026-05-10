@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\DTOs\Juego\JuegoDto;
 use App\DTOs\Resultado\ResultadoDto;
 use App\DTOs\User\UserDto;
 use App\Models\Resultado;
@@ -37,5 +38,10 @@ class ResultadoRepository
     public function getByUserId(UserDto $userDto): Collection
     {
         return Resultado::where('user_id', $userDto->id)->get();
+    }
+
+    public function getByUserIdJuegoId(UserDto $userDto, JuegoDto $juegoDto): Collection
+    {
+        return Resultado::where('user_id', $userDto->id)->whereHas('logro', fn($query) => $query->where('juego_id', $juegoDto->id))->get();
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestFriendship;
 use App\Http\Requests\StoreAmigoRequest;
 use App\Http\Requests\UpdateAmigoRequest;
+use App\Models\User;
 use App\Services\AmigoService;
 use App\Helpers\JsonResponseBuilderHelper;
 use App\Models\Amigo;
@@ -88,6 +89,21 @@ class AmigoController extends Controller
         try {
             $deleted = $this->amigoService->deleteAmigo($amigo);
             return JsonResponseBuilderHelper::buildJsonSuccess('Amistad eliminada correctamente');
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function getFriendsByUserId(?User $user = null): JsonResponse
+    {
+        try {
+            $user ??= Auth::user();
+            if ($user == null) {
+                throw new Exception('Usuario no autenticado', 401);
+            }
+            $userDto = new UserDto(id: $user->id);
+            $friends = $this->amigoService->getAmigosByUserId($userDto->id);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistades obtenidas correctamente', ['data' => $friends]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }

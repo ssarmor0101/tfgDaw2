@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Services\UserService;
 use App\Helpers\JsonResponseBuilderHelper;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\JsonResponse;
 use Exception;
 
@@ -81,6 +82,17 @@ class UserController extends Controller
         try {
             $deleted = $this->userService->deleteUser($user);
             return JsonResponseBuilderHelper::buildJsonSuccess('User eliminado con exito');
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function eliminateAccount(): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            $deleted = $this->userService->deleteUser($user);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Cuenta eliminada con exito');
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
