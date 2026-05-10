@@ -12,6 +12,7 @@ use App\Models\User;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Exception;
+use Request;
 
 class UserController extends Controller
 {
@@ -82,6 +83,18 @@ class UserController extends Controller
         try {
             $deleted = $this->userService->deleteUser($user);
             return JsonResponseBuilderHelper::buildJsonSuccess('User eliminado con exito');
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function updateOwnProfile(Request $request): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            $userDto = UserDto::fromArray($request->validated());
+            $updated = $this->userService->updateUser($user, $userDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Perfil actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
