@@ -27,20 +27,30 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::name('api.')->group(function () {
         // Amigos
+        Route::get('/amigos/user/{user?}', [AmigoController::class, 'getFriendsByUserId'])->name('amigos.user');
         Route::post('/amigos/request', [AmigoController::class, 'requestFriendshipByAuthUser'])->name('amigos.request');
         Route::put('/amigos/{amigo}/accept', [AmigoController::class, 'acceptFriendship'])->name('amigos.accept');
         Route::apiResource('amigos', AmigoController::class);
 
         // Puntuaciones
         Route::get('/puntuaciones/user/{user?}', [PuntuacionController::class, 'getPuntuacionesByUserId'])->name('puntuaciones.user');
+        Route::get('/puntuaciones/juego/{juego}', [PuntuacionController::class, 'getPuntuacionesByAuthUserJuegoId'])->name('puntuaciones.juego');
+        Route::get('/puntuaciones/user/{user}/juego/{juego}', [PuntuacionController::class, 'getPuntuacionesByUserIdJuegoId'])->name('puntuaciones.user.juego');
+        Route::post('/puntuaciones/juego/{juego}', [PuntuacionController::class, 'publishPuntuacion'])->name('puntuaciones.publish');
         Route::apiResource('puntuaciones', PuntuacionController::class);
 
         // Resultados
         Route::get('/resultados/user/{user?}', [ResultadoController::class, 'getResultadosByUserId'])->name('resultados.user');
+        Route::get('/resultados/juego/{juego}', [ResultadoController::class, 'getResultadosByAuthUserJuegoId'])->name('resultados.juego');
+        Route::get('/resultados/friend/{friend}/juego/{juego}', [ResultadoController::class, 'getResultadosByFriendIdJuegoId'])->name('resultados.friend.juego');
+        Route::post('/resultados/logro/{logro}', [ResultadoController::class, 'publishResultado'])->name('resultados.publish');
         Route::apiResource('resultados', ResultadoController::class);
 
-        // Other Resources
+        // Users
+        Route::delete('/account', [UserController::class, 'eliminateAccount'])->name('users.eliminate');
         Route::apiResource('users', UserController::class);
+
+        // Other Resources
         Route::apiResource('juegos', JuegoController::class);
         Route::apiResource('logros', LogroController::class);
     });

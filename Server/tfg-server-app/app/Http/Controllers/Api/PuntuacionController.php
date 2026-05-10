@@ -140,4 +140,19 @@ class PuntuacionController extends Controller
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
+
+    public function getPuntuacionesByUserId(?User $user = null): JsonResponse
+    {
+        try {
+            $user ??= Auth::user();
+            if ($user == null) {
+                throw new Exception('Usuario no autenticado', 401);
+            }
+            $userDto = new UserDto(id: $user->id);
+            $puntuaciones = $this->puntuacionService->getPuntuacionesByUserId($userDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Puntuaciones obtenidas con exito', ['data' => $puntuaciones]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
 }

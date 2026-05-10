@@ -39,4 +39,9 @@ class PuntuacionRepository
     {
         return Puntuacion::where('user_id', $userDto->id)->where('juego_id', $juegoDto->id)->get();
     }
+
+    public function getByUserId(UserDto $userDto): Collection
+    {
+        return Puntuacion::where('user_id', $userDto->id)->get();
+    }
 }
