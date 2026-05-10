@@ -31,6 +31,8 @@ Route::name('api.')->group(function () {
 
     Route::get('/resultados/user/{user}/juego/{juego}', [ResultadoController::class, 'getResultadosByUserIdJuegoId'])->name('resultados.user.juego');
 
+    Route::get('/users/search/{name}', [UserController::class, 'searchUsersByName'])->name('users.search');
+
     /*
     |--------------------------------------------------------------------------
     | Authenticated Routes

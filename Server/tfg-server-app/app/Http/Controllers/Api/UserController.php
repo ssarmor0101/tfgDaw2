@@ -88,6 +88,16 @@ class UserController extends Controller
         }
     }
 
+    public function searchUsersByName(string $name): JsonResponse
+    {
+        try {
+            $users = $this->userService->searchUsersByName($name);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Usuarios obtenidos con exito', ['data' => $users]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
     public function getAccount(): JsonResponse
     {
         try {

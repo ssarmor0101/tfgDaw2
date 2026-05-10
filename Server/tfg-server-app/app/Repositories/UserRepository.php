@@ -37,4 +37,9 @@ class UserRepository
     {
         return User::where('name', $name)->first();
     }
+
+    public function getByName(string $name): Collection
+    {
+        return User::where('name', 'like', "%{$name}%")->get();
+    }
 }

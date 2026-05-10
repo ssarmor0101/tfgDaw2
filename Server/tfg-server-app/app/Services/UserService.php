@@ -31,6 +31,11 @@ class UserService
         return $user ? UserDto::fromModel($user) : null;
     }
 
+    public function searchUsersByName(string $name): Collection
+    {
+        return UserDto::collection($this->userRepository->getByName($name));
+    }
+
     public function createUser(UserDto $userDto): UserDto
     {
         $user = $this->userRepository->create($userDto);
