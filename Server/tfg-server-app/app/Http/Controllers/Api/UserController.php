@@ -88,6 +88,17 @@ class UserController extends Controller
         }
     }
 
+    public function getAccount(): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            $userDto = UserDto::fromModel($user);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Cuenta obtenida con exito', ['data' => $userDto]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
     public function updateOwnProfile(Request $request): JsonResponse
     {
         try {

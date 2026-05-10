@@ -59,12 +59,14 @@ Route::name('api.')->group(function () {
         Route::delete('/resultados/{resultado}', [ResultadoController::class, 'destroy'])->name('resultados.destroy');
 
         // Users
-        Route::delete('/account', [UserController::class, 'eliminateAccount'])->name('users.eliminate');
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
         Route::match(['put', 'patch'], '/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::get('/account', [UserController::class, 'getAccount'])->name('users.getAccount');
+        Route::match(['put', 'patch'], '/account', [UserController::class, 'updateOwnProfile'])->name('users.updateOwnProfile');
+        Route::delete('/account', [UserController::class, 'eliminateAccount'])->name('users.eliminate');
 
         // Otros recursos
         Route::get('/juegos', [JuegoController::class, 'index'])->name('juegos.index');
