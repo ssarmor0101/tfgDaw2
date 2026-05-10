@@ -23,8 +23,9 @@ class AmigoFactory extends Factory
         $userB = $users[1];
 
         return [
-            'user_id'   => min($userA, $userB),
+            'user_id' => min($userA, $userB),
             'friend_id' => max($userA, $userB),
+            'is_friend' => $this->faker->boolean(50),
         ];
     }
 }

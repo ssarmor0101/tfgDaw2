@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\User\UserDto;
+use App\Helpers\AmigoHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RequestFriendship;
 use App\Http\Requests\StoreAmigoRequest;
 use App\Http\Requests\UpdateAmigoRequest;
+use App\Models\User;
 use App\Services\AmigoService;
 use App\Helpers\JsonResponseBuilderHelper;
 use App\Models\Amigo;
 use App\DTOs\Amigo\AmigoDto;
+use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Exception;
@@ -16,7 +21,8 @@ use Exception;
 class AmigoController extends Controller
 {
     public function __construct(
-        private readonly AmigoService $amigoService
+        private readonly AmigoService $amigoService,
+        private readonly UserService $userService,
     ) {
     }
 
@@ -28,9 +34,9 @@ class AmigoController extends Controller
         try {
             $user = Auth::user();
             $amigos = $user->isAdmin() ? $this->amigoService->getAllAmigos() : $this->amigoService->getAmigosByUserId($user->id);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigos recibidos correctamente', ['data' => $amigos]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistades recibidas correctamente', ['data' => $amigos]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al recibir amigos: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -42,60 +48,98 @@ class AmigoController extends Controller
         try {
             $amigoDto = AmigoDto::fromArray($request->validated());
             $amigo = $this->amigoService->createAmigo($amigoDto);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigo creado con exito', ['data' => $amigo]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad creada con exito', ['data' => $amigo]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear amigo: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(Amigo $amigo): JsonResponse
     {
         try {
-            $amigo = $this->amigoService->getAmigoById($id);
-            if (!$amigo) {
-                throw new Exception('Amigo no encontrado', 404);
-            }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigo recibido correctamente', ['data' => $amigo]);
+            $amigoDto = AmigoDto::fromModel($amigo);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad recibida correctamente', ['data' => $amigoDto]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al recibir amigo: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAmigoRequest $request, int $id): JsonResponse
+    public function update(UpdateAmigoRequest $request, Amigo $amigo): JsonResponse
     {
         try {
-            $amigo = Amigo::find($id);
-            if (!$amigo) {
-                throw new Exception('Amigo no encontrado', 404);
-            }
             $amigoDto = AmigoDto::fromArray($request->validated());
             $updated = $this->amigoService->updateAmigo($amigo, $amigoDto);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigo actualizado con exito', ['data' => $updated]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad actualizada con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar amigo: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Amigo $amigo): JsonResponse
     {
         try {
-            $amigo = Amigo::find($id);
-            if (!$amigo) {
-                throw new Exception('Amigo no encontrado', 404);
-            }
             $deleted = $this->amigoService->deleteAmigo($amigo);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Amigo eliminado correctamente');
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad eliminada correctamente');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar amigo: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function getFriendsByUserId(?User $user = null): JsonResponse
+    {
+        try {
+            $user ??= Auth::user();
+            if ($user == null) {
+                throw new Exception('Usuario no autenticado', 401);
+            }
+            $userDto = new UserDto(id: $user->id);
+            $friends = $this->amigoService->getAmigosByUserId($userDto->id);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistades obtenidas correctamente', ['data' => $friends]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function requestFriendshipByAuthUser(RequestFriendship $request): JsonResponse
+    {
+        try {
+            $validated = $request->validated();
+            $user = Auth::user();
+            $userDto = UserDto::fromModel($user);
+            $friendDto = $this->userService->getUserByUsername($validated['username']);
+            if (!$friendDto) {
+                throw new Exception('Usuario no encontrado', 404);
+            }
+            [$userA, $userB] = AmigoHelper::orderUsersPairForAmigo($userDto, $friendDto);
+            $amigoDto = new AmigoDto(
+                user_id: $userA->id,
+                friend_id: $userB->id,
+            );
+            $amigo = $this->amigoService->createAmigo($amigoDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Solicitud de amistad enviada correctamente', ['data' => $amigo]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function acceptFriendship(Amigo $amigo): JsonResponse
+    {
+        try {
+            $amigoDto = AmigoDto::fromModel($amigo);
+            $amigoDto->is_friend = true;
+            $amigo = $this->amigoService->updateAmigo($amigo, $amigoDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad aceptada correctamente', ['data' => $amigo]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 }

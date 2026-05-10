@@ -8,9 +8,10 @@ use App\Models\Amigo;
 class AmigoDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?int $user_id,
-        public ?int $friend_id
+        public ?int $id = null,
+        public ?int $user_id = null,
+        public ?int $friend_id = null,
+        public ?bool $is_friend = null,
     ) {
     }
 
@@ -20,7 +21,8 @@ class AmigoDto extends Dto
         return new self(
             id: $item->id,
             user_id: $item->user_id,
-            friend_id: $item->friend_id
+            friend_id: $item->friend_id,
+            is_friend: $item->is_friend,
         );
     }
 
@@ -29,7 +31,8 @@ class AmigoDto extends Dto
         return new self(
             id: $data['id'] ?? null,
             user_id: $data['user_id'] ?? null,
-            friend_id: $data['friend_id'] ?? null
+            friend_id: $data['friend_id'] ?? null,
+            is_friend: $data['is_friend'] ?? null,
         );
     }
 
@@ -38,7 +41,8 @@ class AmigoDto extends Dto
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'friend_id' => $this->friend_id
+            'friend_id' => $this->friend_id,
+            'is_friend' => $this->is_friend,
         ];
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\DTOs\User\UserDto;
+use App\Helpers\AmigoHelper;
 use Database\Factories\AmigoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +22,8 @@ class Amigo extends Model
 
     protected $fillable = [
         'user_id',
-        'friend_id'
+        'friend_id',
+        'is_friend'
     ];
 
     /**
@@ -54,20 +57,12 @@ class Amigo extends Model
         return $this->belongsTo(User::class, 'friend_id');
     }
 
-    public function isFriend(User $user): bool
-    {
-        $currentId = $this->id;
-        $userId = $user->id;
-        if ($currentId > $userId) [$currentId, $userId] = [$userId, $currentId];
-        return self::where('user_id', $currentId)->where('friend_id', $userId)->exists();
-    }
-
     /**
      * Check whether unordered pair exists (returns bool).
      */
-    public static function pairExists(int $a, int $b): bool
+    public static function pairExists(UserDto $user, UserDto $friend): bool
     {
-        if ($a > $b) [$a, $b] = [$b, $a];
-        return self::where('user_id', $a)->where('friend_id', $b)->exists();
+        [$a, $b] = AmigoHelper::orderUsersPairForAmigo($user, $friend);
+        return self::where('user_id', $a->id)->where('friend_id', $b->id)->exists();
     }
 }

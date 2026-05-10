@@ -7,8 +7,8 @@ use App\DTOs\Dto;
 class AuthDto extends Dto
 {
     public function __construct(
-        public ?string $token,
-        public ?array $user,
+        public ?string $token = null,
+        public ?array $user = null,
     ) {
     }
 
