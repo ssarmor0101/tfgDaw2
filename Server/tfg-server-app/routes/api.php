@@ -50,7 +50,7 @@ Route::name('api.')->group(function () {
         // Resultados
         Route::get('/resultados/user/{user?}', [ResultadoController::class, 'getResultadosByUserId'])->name('resultados.user');
         Route::get('/resultados/juego/{juego}', [ResultadoController::class, 'getResultadosByAuthUserJuegoId'])->name('resultados.juego');
-        Route::get('/resultados/friend/{friend}/juego/{juego}', [ResultadoController::class, 'getResultadosByFriendIdJuegoId'])->name('resultados.friend.juego');
+        Route::get('/resultados/user/{user}/juego/{juego}', [ResultadoController::class, 'getResultadosByUserIdJuegoId'])->name('resultados.user.juego');
         Route::post('/resultados/logro/{logro}', [ResultadoController::class, 'publishResultado'])->name('resultados.publish');
         Route::get('/resultados', [ResultadoController::class, 'index'])->name('resultados.index');
         Route::post('/resultados', [ResultadoController::class, 'store'])->name('resultados.store');

@@ -127,19 +127,12 @@ class ResultadoController extends Controller
         }
     }
 
-    public function getResultadosByFriendIdJuegoId(User $friend, Juego $juego): JsonResponse
+    public function getResultadosByUserIdJuegoId(User $user, Juego $juego): JsonResponse
     {
         try {
-            $authUser = Auth::user();
-            if ($authUser == null) {
-                throw new Exception('Usuario no autenticado', 401);
-            }
-            $friendDto = UserDto::fromModel($friend);
-            if (!$authUser->isFriend($friendDto)) {
-                throw new Exception('El usuario no es amigo del usuario autenticado', 403);
-            }
+            $userDto = UserDto::fromModel($user);
             $juegoDto = JuegoDto::fromModel($juego);
-            $resultados = $this->resultadoService->getResultadosByUserIdJuegoId($friendDto, $juegoDto);
+            $resultados = $this->resultadoService->getResultadosByUserIdJuegoId($userDto, $juegoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Resultados obtenidos con exito', ['data' => $resultados]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
