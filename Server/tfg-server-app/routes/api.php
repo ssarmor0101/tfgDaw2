@@ -53,7 +53,7 @@ Route::name('api.')->group(function () {
         Route::post('/resultados/logro/{logro}', [ResultadoController::class, 'publishResultado'])->name('resultados.publish');
 
         // Amigos (Social)
-        Route::get('/amigos', [AmigoController::class, 'getFriendsByAuthUser'])->name('amigos.user');
+        Route::get('/amigos', [AmigoController::class, 'getFriendsByAuthUser'])->name('amigos.auth');
         Route::post('/amigos/request', [AmigoController::class, 'requestFriendshipByAuthUser'])->name('amigos.request');
         Route::put('/amigos/{amigo}/accept', [AmigoController::class, 'acceptFriendship'])->name('amigos.accept');
 
