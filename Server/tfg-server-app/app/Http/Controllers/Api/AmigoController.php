@@ -94,10 +94,10 @@ class AmigoController extends Controller
         }
     }
 
-    public function getFriendsByUserId(?User $user = null): JsonResponse
+    public function getFriendsByAuthUser(): JsonResponse
     {
         try {
-            $user ??= Auth::user();
+            $user = Auth::user();
             if ($user == null) {
                 throw new Exception('Usuario no autenticado', 401);
             }
