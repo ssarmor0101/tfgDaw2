@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\Juego\JuegoDto;
 use App\Repositories\PuntuacionRepository;
 use App\DTOs\Puntuacion\PuntuacionDto;
 use App\DTOs\User\UserDto;
@@ -42,8 +43,8 @@ class PuntuacionService
         return $this->puntuacionRepository->delete($puntuacion);
     }
 
-    public function getPuntuacionesByUserId(UserDto $userDto): Collection
+    public function getPuntuacionesByUserIdJuegoId(UserDto $userDto, JuegoDto $juegoDto): Collection
     {
-        return PuntuacionDto::collection($this->puntuacionRepository->getByUserId($userDto));
+        return PuntuacionDto::collection($this->puntuacionRepository->getByUserIdJuegoId($userDto, $juegoDto));
     }
 }

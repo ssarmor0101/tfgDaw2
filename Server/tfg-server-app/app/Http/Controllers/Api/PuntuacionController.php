@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\Juego\JuegoDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePuntuacionRequest;
 use App\Http\Requests\UpdatePuntuacionRequest;
@@ -94,15 +95,31 @@ class PuntuacionController extends Controller
     /**
      * Obtener las puntuaciones de un usuario.
      */
-    public function getPuntuacionesByUserId(?User $user = null): JsonResponse
+    public function getPuntuacionesByAuthUserJuegoId(Juego $juego): JsonResponse
     {
         try {
-            $user ??= Auth::user();
-            if (!$user) {
+            $user = Auth::user();
+            if ($user == null) {
                 throw new Exception('Usuario no autenticado', 401);
             }
             $userDto = new UserDto(id: $user->id);
-            $puntuaciones = $this->puntuacionService->getPuntuacionesByUserId($userDto);
+            $juegoDto = JuegoDto::fromModel($juego);
+            $puntuaciones = $this->puntuacionService->getPuntuacionesByUserIdJuegoId($userDto, $juegoDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Puntuaciones obtenidas con exito', ['data' => $puntuaciones]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Obtener las puntuaciones de un usuario.
+     */
+    public function getPuntuacionesByUserIdJuegoId(User $user, Juego $juego): JsonResponse
+    {
+        try {
+            $userDto = UserDto::fromModel($user);
+            $juegoDto = JuegoDto::fromModel($juego);
+            $puntuaciones = $this->puntuacionService->getPuntuacionesByUserIdJuegoId($userDto, $juegoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Puntuaciones obtenidas con exito', ['data' => $puntuaciones]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
