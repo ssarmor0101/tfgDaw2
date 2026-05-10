@@ -20,11 +20,11 @@ Route::name('api.')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Protected Routes
+    | Authenticated Routes
     |--------------------------------------------------------------------------
     */
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
         // Amigos
         Route::get('/amigos/user/{user?}', [AmigoController::class, 'getFriendsByUserId'])->name('amigos.user');
