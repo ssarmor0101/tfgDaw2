@@ -126,6 +126,20 @@ class PuntuacionController extends Controller
         }
     }
 
+    /**
+     * Obtener las puntuaciones de todos los usuarios.
+     */
+    public function getPuntuacionesByJuegoId(Juego $juego): JsonResponse
+    {
+        try {
+            $juegoDto = JuegoDto::fromModel($juego);
+            $puntuaciones = $this->puntuacionService->getPuntuacionesByJuegoId($juegoDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Puntuaciones obtenidas con exito', ['data' => $puntuaciones]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
     public function publishPuntuacion(Juego $juego, Request $request): JsonResponse
     {
         try {
