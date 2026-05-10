@@ -78,5 +78,9 @@ Route::name('api.')->group(function () {
         Route::get('/logros/{logro}', [LogroController::class, 'show'])->name('logros.show');
         Route::match(['put', 'patch'], '/logros/{logro}', [LogroController::class, 'update'])->name('logros.update');
         Route::delete('/logros/{logro}', [LogroController::class, 'destroy'])->name('logros.destroy');
+
+        Route::middleware('rol:admin')->group(function () {
+
+        });
     });
 });
