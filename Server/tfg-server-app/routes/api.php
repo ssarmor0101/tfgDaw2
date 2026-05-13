@@ -58,6 +58,7 @@ Route::name('api.')->group(function () {
         Route::get('/amigos', [AmigoController::class, 'getFriendsByAuthUser'])->name('amigos.auth');
         Route::post('/amigos/request', [AmigoController::class, 'requestFriendshipByAuthUser'])->name('amigos.request');
         Route::put('/amigos/{amigo}/accept', [AmigoController::class, 'acceptFriendship'])->name('amigos.accept');
+        Route::delete('/amigos/{amigo}/delete', [AmigoController::class, 'deleteFriendship'])->name('amigos.delete');
 
         /*
         |--------------------------------------------------------------------------

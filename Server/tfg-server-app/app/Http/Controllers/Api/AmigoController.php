@@ -134,10 +134,28 @@ class AmigoController extends Controller
     public function acceptFriendship(Amigo $amigo): JsonResponse
     {
         try {
+            $user = Auth::user();
+            if (!$amigo->userIsFriend($user)) {
+                throw new Exception('No tienes permiso para aceptar esta solicitud de amistad', 403);
+            }
             $amigoDto = AmigoDto::fromModel($amigo);
             $amigoDto->is_friend = true;
             $amigo = $this->amigoService->updateAmigo($amigo, $amigoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Amistad aceptada correctamente', ['data' => $amigo]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function deleteFriendship(Amigo $amigo): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            if (!$amigo->userIsFriend($user)) {
+                throw new Exception('No tienes permiso para eliminar esta solicitud de amistad', 403);
+            }
+            $deleted = $this->amigoService->deleteAmigo($amigo);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Amistad eliminada correctamente');
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
