@@ -8,10 +8,10 @@ use App\Models\Logro;
 class LogroDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?string $name,
-        public ?string $description,
-        public ?int $juego_id
+        public ?int $id = null,
+        public ?string $name = null,
+        public ?string $description = null,
+        public ?int $juego_id = null
     ) {
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\User\UserDto;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Amigo;
 
@@ -15,18 +16,19 @@ class StoreAmigoRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => ['required','integer','exists:users,id'],
-            'friend_id' => ['required','integer','exists:users,id','different:user_id'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'friend_id' => ['required', 'integer', 'exists:users,id', 'different:user_id'],
+            'is_friend' => ['nullable', 'boolean'],
         ];
     }
 
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $a = (int) $this->input('user_id');
-            $b = (int) $this->input('friend_id');
-            if ($a && $b) {
-                if (Amigo::pairExists($a, $b)) {
+            $user = new UserDto(id: $this->input('user_id'));
+            $friend = new UserDto(id: $this->input('friend_id'));
+            if ($user->id && $friend->id) {
+                if (Amigo::pairExists($user, $friend)) {
                     $validator->errors()->add('friend_id', 'La relación de amistad ya existe.');
                 }
             }
@@ -44,6 +46,8 @@ class StoreAmigoRequest extends FormRequest
             'friend_id.integer' => 'El usuario B debe ser un número.',
             'friend_id.exists' => 'El usuario B no existe.',
             'friend_id.different' => 'Los dos usuarios deben ser distintos.',
+
+            'is_friend.boolean' => 'El estado de la relación debe ser un booleano.',
         ];
     }
 }

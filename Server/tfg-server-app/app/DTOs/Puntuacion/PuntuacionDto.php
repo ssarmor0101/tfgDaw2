@@ -8,10 +8,10 @@ use App\Models\Puntuacion;
 class PuntuacionDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?int $user_id,
-        public ?int $juego_id,
-        public ?int $puntuacion
+        public ?int $id = null,
+        public ?int $user_id = null,
+        public ?int $juego_id = null,
+        public ?int $puntuacion = null
     ) {
     }
 

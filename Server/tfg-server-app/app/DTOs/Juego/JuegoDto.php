@@ -8,9 +8,9 @@ use App\Models\Juego;
 class JuegoDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?string $name,
-        public ?string $description
+        public ?int $id = null,
+        public ?string $name = null,
+        public ?string $description = null
     ) {
     }
 

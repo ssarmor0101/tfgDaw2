@@ -4,7 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\DTOs\User\UserDto;
 use App\Enums\RolSlug;
+use App\Helpers\AmigoHelper;
+use App\Repositories\AmigoRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -50,19 +53,23 @@ class User extends Authenticatable
         ];
     }
 
-    public function rol() {
+    public function rol()
+    {
         return $this->belongsTo(Rol::class, 'rol_id');
     }
 
-    public function puntuaciones() {
+    public function puntuaciones()
+    {
         return $this->hasMany(Puntuacion::class, 'user_id');
     }
 
-    public function resultados() {
+    public function resultados()
+    {
         return $this->hasMany(Resultado::class, 'user_id');
     }
 
-    public function amigos() {
+    public function amigos()
+    {
         return $this->hasMany(Amigo::class, 'friend_id');
     }
 
@@ -70,5 +77,13 @@ class User extends Authenticatable
     {
         $rolAdmin = Rol::where('slug', RolSlug::ADMIN)->first();
         return $this->rol_id === $rolAdmin->id;
+    }
+
+    public function isFriend(UserDto $user): bool
+    {
+        $currentUser = $this;
+        $currentUserDto = UserDto::fromModel($currentUser);
+        $friend = (new AmigoRepository)->findByPair($currentUserDto, $user);
+        return $friend != null && $friend->is_friend;
     }
 }

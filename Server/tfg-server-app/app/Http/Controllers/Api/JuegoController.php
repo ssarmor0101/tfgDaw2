@@ -28,7 +28,7 @@ class JuegoController extends Controller
             $juegos = $this->juegoService->getAllJuegos();
             return JsonResponseBuilderHelper::buildJsonSuccess('Juegos recuperados correctamente', ['data' => $juegos]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al recuperar juegos: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -42,58 +42,47 @@ class JuegoController extends Controller
             $juego = $this->juegoService->createJuego($juegoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Juego creado con exito', ['data' => $juego]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al crear juego: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(Juego $juego): JsonResponse
     {
         try {
-            $juego = $this->juegoService->getJuegoById($id);
-            if (!$juego) {
-                throw new Exception('Juego no encontrado', 404);
-            }
-            return JsonResponseBuilderHelper::buildJsonSuccess('Juego recuperado correctamente', ['data' => $juego]);
+            $juegoDto = JuegoDto::fromModel($juego);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Juego recuperado correctamente', ['data' => $juegoDto]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al recuperar juego: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateJuegoRequest $request, int $id): JsonResponse
+    public function update(UpdateJuegoRequest $request, Juego $juego): JsonResponse
     {
         try {
-            $juego = Juego::find($id);
-            if (!$juego) {
-                throw new Exception('Juego no encontrado', 404);
-            }
             $juegoDto = JuegoDto::fromArray($request->validated());
             $updated = $this->juegoService->updateJuego($juego, $juegoDto);
             return JsonResponseBuilderHelper::buildJsonSuccess('Juego actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al actualizar juego: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Juego $juego): JsonResponse
     {
         try {
-            $juego = Juego::find($id);
-            if (!$juego) {
-                throw new Exception('Juego no encontrado', 404);
-            }
             $deleted = $this->juegoService->deleteJuego($juego);
-            return JsonResponseBuilderHelper::buildJsonSuccess('Juego eliminado con exito', ['data' => $deleted]);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Juego eliminado con exito');
         } catch (Exception $e) {
-            return JsonResponseBuilderHelper::buildJsonError('Error al eliminar juego: ' . $e->getMessage(), $e->getCode());
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }
     }
 }
