@@ -48,6 +48,11 @@ class PuntuacionService
         return PuntuacionDto::collection($this->puntuacionRepository->getByUserIdJuegoId($userDto, $juegoDto));
     }
 
+    public function getPuntuacionesByJuegoId(JuegoDto $juegoDto): Collection
+    {
+        return PuntuacionDto::collection($this->puntuacionRepository->getByJuegoId($juegoDto));
+    }
+
     public function getPuntuacionesByUserId(UserDto $userDto): Collection
     {
         return PuntuacionDto::collection($this->puntuacionRepository->getByUserId($userDto));

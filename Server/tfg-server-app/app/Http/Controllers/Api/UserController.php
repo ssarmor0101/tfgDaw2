@@ -12,6 +12,7 @@ use App\Models\User;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Exception;
+use Request;
 
 class UserController extends Controller
 {
@@ -82,6 +83,39 @@ class UserController extends Controller
         try {
             $deleted = $this->userService->deleteUser($user);
             return JsonResponseBuilderHelper::buildJsonSuccess('User eliminado con exito');
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function searchUsersByName(string $name): JsonResponse
+    {
+        try {
+            $users = $this->userService->searchUsersByName($name);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Usuarios obtenidos con exito', ['data' => $users]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function getAccount(): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            $userDto = UserDto::fromModel($user);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Cuenta obtenida con exito', ['data' => $userDto]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function updateOwnProfile(Request $request): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            $userDto = UserDto::fromArray($request->validated());
+            $updated = $this->userService->updateUser($user, $userDto);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Perfil actualizado con exito', ['data' => $updated]);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }

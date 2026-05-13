@@ -65,4 +65,9 @@ class Amigo extends Model
         [$a, $b] = AmigoHelper::orderUsersPairForAmigo($user, $friend);
         return self::where('user_id', $a->id)->where('friend_id', $b->id)->exists();
     }
+
+    public function userIsFriend(User $user): bool
+    {
+        return $this->user_id == $user->id || $this->friend_id == $user->id;
+    }
 }

@@ -44,4 +44,9 @@ class PuntuacionRepository
     {
         return Puntuacion::where('user_id', $userDto->id)->get();
     }
+
+    public function getByJuegoId(JuegoDto $juegoDto): Collection
+    {
+        return Puntuacion::where('juego_id', $juegoDto->id)->get();
+    }
 }
