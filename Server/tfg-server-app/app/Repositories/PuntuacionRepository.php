@@ -12,12 +12,12 @@ class PuntuacionRepository
 {
     public function all(): Collection
     {
-        return Puntuacion::all();
+        return Puntuacion::with('user')->get();
     }
 
     public function find(int $id): ?Puntuacion
     {
-        return Puntuacion::find($id);
+        return Puntuacion::with('user')->find($id);
     }
 
     public function create(PuntuacionDto $puntuacionDto): Puntuacion
@@ -37,16 +37,16 @@ class PuntuacionRepository
 
     public function getByUserIdJuegoId(UserDto $userDto, JuegoDto $juegoDto): Collection
     {
-        return Puntuacion::where('user_id', $userDto->id)->where('juego_id', $juegoDto->id)->get();
+        return Puntuacion::with('user')->where('user_id', $userDto->id)->where('juego_id', $juegoDto->id)->get();
     }
 
     public function getByUserId(UserDto $userDto): Collection
     {
-        return Puntuacion::where('user_id', $userDto->id)->get();
+        return Puntuacion::with('user')->where('user_id', $userDto->id)->get();
     }
 
     public function getByJuegoId(JuegoDto $juegoDto): Collection
     {
-        return Puntuacion::where('juego_id', $juegoDto->id)->get();
+        return Puntuacion::with('user')->where('juego_id', $juegoDto->id)->get();
     }
 }

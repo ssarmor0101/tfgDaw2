@@ -12,6 +12,8 @@ class AmigoDto extends Dto
         public ?int $user_id = null,
         public ?int $friend_id = null,
         public ?bool $is_friend = null,
+        public ?array $user = null,
+        public ?array $friend = null,
     ) {
     }
 
@@ -23,6 +25,8 @@ class AmigoDto extends Dto
             user_id: $item->user_id,
             friend_id: $item->friend_id,
             is_friend: $item->is_friend,
+            user: $item->user?->toArray(),
+            friend: $item->friend?->toArray(),
         );
     }
 
@@ -33,6 +37,8 @@ class AmigoDto extends Dto
             user_id: $data['user_id'] ?? null,
             friend_id: $data['friend_id'] ?? null,
             is_friend: $data['is_friend'] ?? null,
+            user: $data['user'] ?? null,
+            friend: $data['friend'] ?? null,
         );
     }
 
@@ -43,6 +49,8 @@ class AmigoDto extends Dto
             'user_id' => $this->user_id,
             'friend_id' => $this->friend_id,
             'is_friend' => $this->is_friend,
+            'user' => $this->user,
+            'friend' => $this->friend,
         ];
     }
 }

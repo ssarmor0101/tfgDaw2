@@ -11,7 +11,9 @@ class PuntuacionDto extends Dto
         public ?int $id = null,
         public ?int $user_id = null,
         public ?int $juego_id = null,
-        public ?int $puntuacion = null
+        public ?int $puntuacion = null,
+        public ?array $user = null,
+        public ?array $juego = null
     ) {
     }
 
@@ -22,7 +24,9 @@ class PuntuacionDto extends Dto
             id: $item->id,
             user_id: $item->user_id,
             juego_id: $item->juego_id,
-            puntuacion: $item->puntuacion
+            puntuacion: $item->puntuacion,
+            user: $item->user?->toArray(),
+            juego: $item->juego?->toArray(),
         );
     }
 
@@ -32,7 +36,9 @@ class PuntuacionDto extends Dto
             id: $data['id'] ?? null,
             user_id: $data['user_id'] ?? null,
             juego_id: $data['juego_id'] ?? null,
-            puntuacion: $data['puntuacion'] ?? null
+            puntuacion: $data['puntuacion'] ?? null,
+            user: $data['user'] ?? null,
+            juego: $data['juego'] ?? null,
         );
     }
 
@@ -42,7 +48,9 @@ class PuntuacionDto extends Dto
             'id' => $this->id,
             'user_id' => $this->user_id,
             'juego_id' => $this->juego_id,
-            'puntuacion' => $this->puntuacion
+            'puntuacion' => $this->puntuacion,
+            'user' => $this->user,
+            'juego' => $this->juego
         ];
     }
 }

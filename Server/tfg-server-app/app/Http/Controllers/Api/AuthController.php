@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\Auth\AuthDto;
 use App\DTOs\User\UserDto;
+use App\Enums\RolSlug;
 use App\Http\Controllers\Controller;
+use App\Models\Rol;
+use App\Models\User;
 use App\Services\AuthService;
 use App\Helpers\JsonResponseBuilderHelper;
 use App\Services\UserService;
@@ -50,13 +54,21 @@ class AuthController extends Controller
                 'password' => 'required|string|min:8|confirmed',
             ]);
 
-            $userDto = UserDto::fromArray($validated);
+            $userRole = Rol::where('slug', RolSlug::USER->value)->first();
+            $userDto = UserDto::fromArray(array_merge($validated, ['rol_id' => $userRole?->id]));
 
-            $user = $this->userService->createUser($userDto);
+            $createdUser = $this->userService->createUser($userDto);
 
-            return JsonResponseBuilderHelper::buildJsonSuccess('Registro exitoso', ['data' => $user]);
+            $userModel = User::with('rol')->find($createdUser->id);
+            $token = $userModel->createToken('api-token')->plainTextToken;
+            $authDto = new AuthDto(
+                token: $token,
+                user: UserDto::fromModel($userModel)->toArray()
+            );
+
+            return JsonResponseBuilderHelper::buildJsonSuccess('Registro exitoso', ['data' => $authDto]);
         } catch (Exception $e) {
-            $code = $e->getCode() ?: 400;
+            $code = is_int($e->getCode()) ? ($e->getCode() ?: 400) : 400;
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $code);
         }
     }

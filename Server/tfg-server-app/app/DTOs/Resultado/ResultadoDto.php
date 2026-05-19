@@ -10,7 +10,10 @@ class ResultadoDto extends Dto
     public function __construct(
         public ?int $id = null,
         public ?int $user_id = null,
-        public ?int $logro_id = null
+        public ?int $logro_id = null,
+        public ?array $user = null,
+        public ?array $logro = null,
+        public ?array $juego = null
     ) {
     }
 
@@ -20,7 +23,10 @@ class ResultadoDto extends Dto
         return new self(
             id: $item->id,
             user_id: $item->user_id,
-            logro_id: $item->logro_id
+            logro_id: $item->logro_id,
+            user: $item->user?->toArray(),
+            logro: $item->logro?->toArray(),
+            juego: $item->logro?->juego?->toArray(),
         );
     }
 
@@ -29,7 +35,10 @@ class ResultadoDto extends Dto
         return new self(
             id: $data['id'] ?? null,
             user_id: $data['user_id'] ?? null,
-            logro_id: $data['logro_id'] ?? null
+            logro_id: $data['logro_id'] ?? null,
+            user: $data['user'] ?? null,
+            logro: $data['logro'] ?? null,
+            juego: $data['juego'] ?? null,
         );
     }
 
@@ -38,7 +47,10 @@ class ResultadoDto extends Dto
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'logro_id' => $this->logro_id
+            'logro_id' => $this->logro_id,
+            'user' => $this->user,
+            'logro' => $this->logro,
+            'juego' => $this->juego,
         ];
     }
 }

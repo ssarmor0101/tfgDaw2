@@ -22,11 +22,13 @@ class Resultado extends Model
         'logro_id'
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function logro() {
+    public function logro()
+    {
         return $this->belongsTo(Logro::class, 'logro_id');
     }
 }
