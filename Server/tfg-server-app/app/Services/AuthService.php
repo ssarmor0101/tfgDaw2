@@ -20,7 +20,7 @@ class AuthService
     {
         if (Auth::attempt($credentials)) {
             /** @var User $user */
-            $user = Auth::user();
+            $user = Auth::user()->load('rol');
             $token = $user->createToken('api-token')->plainTextToken;
 
             return new AuthDto(

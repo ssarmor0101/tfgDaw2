@@ -8,10 +8,12 @@ use App\Models\User;
 class UserDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?string $name,
-        public ?string $email,
-        public ?int $rol_id
+        public ?int $id = null,
+        public ?string $name = null,
+        public ?string $email = null,
+        public ?int $rol_id = null,
+        public ?string $password = null,
+        public ?array $rol = null
     ) {
     }
 
@@ -22,7 +24,9 @@ class UserDto extends Dto
             id: $item->id,
             name: $item->name,
             email: $item->email,
-            rol_id: $item->rol_id
+            rol_id: $item->rol_id,
+            password: $item->password,
+            rol: $item->rol?->toArray(),
         );
     }
 
@@ -32,7 +36,9 @@ class UserDto extends Dto
             id: $data['id'] ?? null,
             name: $data['name'] ?? null,
             email: $data['email'] ?? null,
-            rol_id: $data['rol_id'] ?? null
+            rol_id: $data['rol_id'] ?? null,
+            password: $data['password'] ?? null,
+            rol: $data['rol'] ?? null,
         );
     }
 
@@ -42,7 +48,9 @@ class UserDto extends Dto
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'rol_id' => $this->rol_id
+            'rol_id' => $this->rol_id,
+            'password' => $this->password,
+            'rol' => $this->rol,
         ];
     }
 }

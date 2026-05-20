@@ -15,8 +15,9 @@ class UpdateAmigoRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => ['required','integer','exists:users,id'],
-            'friend_id' => ['required','integer','exists:users,id','different:user_id'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'friend_id' => ['required', 'integer', 'exists:users,id', 'different:user_id'],
+            'is_friend' => ['nullable', 'boolean'],
         ];
     }
 
@@ -49,6 +50,8 @@ class UpdateAmigoRequest extends FormRequest
             'friend_id.integer' => 'El usuario B debe ser un número.',
             'friend_id.exists' => 'El usuario B no existe.',
             'friend_id.different' => 'Los dos usuarios deben ser distintos.',
+
+            'is_friend.boolean' => 'El estado de la relación debe ser un booleano.',
         ];
     }
 }

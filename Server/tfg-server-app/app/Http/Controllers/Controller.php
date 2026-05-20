@@ -10,5 +10,5 @@ abstract class Controller
     use ValidatesRequests;
     use AuthorizesRequests;
 
-    protected const int DEFAULT_PAGES_NUMBER = 10;
+    protected const DEFAULT_PAGES_NUMBER = 10;
 }

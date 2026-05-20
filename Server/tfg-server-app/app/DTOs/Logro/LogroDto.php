@@ -8,10 +8,11 @@ use App\Models\Logro;
 class LogroDto extends Dto
 {
     public function __construct(
-        public ?int $id,
-        public ?string $name,
-        public ?string $description,
-        public ?int $juego_id
+        public ?int $id = null,
+        public ?string $name = null,
+        public ?string $description = null,
+        public ?int $juego_id = null,
+        public ?array $juego = null,
     ) {
     }
 
@@ -22,7 +23,8 @@ class LogroDto extends Dto
             id: $item->id,
             name: $item->name,
             description: $item->description,
-            juego_id: $item->juego_id
+            juego_id: $item->juego_id,
+            juego: $item->juego?->toArray(),
         );
     }
 
@@ -32,7 +34,8 @@ class LogroDto extends Dto
             id: $data['id'] ?? null,
             name: $data['name'] ?? null,
             description: $data['description'] ?? null,
-            juego_id: $data['juego_id'] ?? null
+            juego_id: $data['juego_id'] ?? null,
+            juego: $data['juego'] ?? null
         );
     }
 
@@ -42,7 +45,8 @@ class LogroDto extends Dto
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'juego_id' => $this->juego_id
+            'juego_id' => $this->juego_id,
+            'juego' => $this->juego
         ];
     }
 }

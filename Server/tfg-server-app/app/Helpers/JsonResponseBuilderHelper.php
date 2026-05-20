@@ -45,8 +45,9 @@ class JsonResponseBuilderHelper
      * @param array $payload
      * @return JsonResponse
      */
-    public static function buildJsonError(string $message = 'Error', int $code = 500, array $payload = []): JsonResponse
+    public static function buildJsonError(string $message = 'Error', int|string $code = 500, array $payload = []): JsonResponse
     {
-        return self::buildJson(false, $message, $payload, $code);
+        $httpCode = is_int($code) && $code >= 100 && $code < 600 ? $code : 500;
+        return self::buildJson(false, $message, $payload, $httpCode);
     }
 }

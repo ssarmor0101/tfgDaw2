@@ -19,6 +19,29 @@ class JuegoService
         return JuegoDto::collection($this->juegoRepository->all());
     }
 
+    public function getPopularJuegos(int $limit = 6): Collection
+    {
+        return JuegoDto::collection($this->juegoRepository->getPopular($limit));
+    }
+
+    public function getRecentJuegos(int $limit = 6): Collection
+    {
+        return JuegoDto::collection($this->juegoRepository->getRecent($limit));
+    }
+
+    public function searchJuegos(string $query = '', string $order = 'popular_desc', int $page = 1, int $perPage = 12): array
+    {
+        $paginator = $this->juegoRepository->search($query, $order, $page, $perPage);
+
+        return [
+            'items'        => JuegoDto::collection($paginator->items())->values(),
+            'total'        => $paginator->total(),
+            'per_page'     => $paginator->perPage(),
+            'current_page' => $paginator->currentPage(),
+            'last_page'    => $paginator->lastPage(),
+        ];
+    }
+
     public function getJuegoById(int $id): ?JuegoDto
     {
         $juego = $this->juegoRepository->find($id);
