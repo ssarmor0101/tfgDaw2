@@ -86,6 +86,10 @@ function useGameScore(gameId: number) {
 function usePublishScore(gameId: number, token: string | null) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [msg, setMsg] = useState('')
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Clean up timer on unmount
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
 
   const publish = async (score: number, onSuccess: () => void) => {
     if (!token) return
@@ -105,6 +109,9 @@ function usePublishScore(gameId: number, token: string | null) {
       setStatus('success')
       setMsg('¡Puntuación publicada correctamente!')
       onSuccess()
+      // Reset after 3.5 s so the publish button reappears for the next game
+      if (timerRef.current) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => setStatus('idle'), 3500)
     } catch (err) {
       setStatus('error')
       setMsg((err as Error).message)

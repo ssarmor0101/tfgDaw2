@@ -225,10 +225,10 @@ export default function BrickBreaker({ gameId }: GameProps) {
         ctx.fillText('BRICK BREAKER', CW / 2, CH / 2 - 42)
         ctx.font = '16px "Courier New", monospace'
         ctx.fillStyle = '#a78bfa'
-        ctx.fillText('Haz clic o pulsa ENTER para comenzar', CW / 2, CH / 2 + 8)
+        ctx.fillText('Toca la pantalla o pulsa ENTER para comenzar', CW / 2, CH / 2 + 8)
         ctx.font = '13px "Courier New", monospace'
         ctx.fillStyle = 'rgba(255,255,255,0.35)'
-        ctx.fillText('← →  /  A D  /  Ratón — para mover la paleta', CW / 2, CH / 2 + 40)
+        ctx.fillText('← →  /  A D  /  Ratón  /  Arrastra en móvil', CW / 2, CH / 2 + 40)
       } else if (phase === 'gameover') {
         ctx.font = 'bold 52px "Courier New", monospace'
         ctx.fillStyle = '#f87171'
@@ -238,7 +238,7 @@ export default function BrickBreaker({ gameId }: GameProps) {
         ctx.fillText(`Puntuación final: ${score.toLocaleString()}`, CW / 2, CH / 2 + 18)
         ctx.font = '13px "Courier New", monospace'
         ctx.fillStyle = 'rgba(255,255,255,0.4)'
-        ctx.fillText('ENTER o clic para reiniciar', CW / 2, CH / 2 + 52)
+        ctx.fillText('ENTER, clic o toca para reiniciar', CW / 2, CH / 2 + 52)
       } else {
         ctx.font = 'bold 52px "Courier New", monospace'
         ctx.fillStyle = '#4ade80'
@@ -248,7 +248,7 @@ export default function BrickBreaker({ gameId }: GameProps) {
         ctx.fillText(`Puntuación final: ${score.toLocaleString()}`, CW / 2, CH / 2 + 18)
         ctx.font = '13px "Courier New", monospace'
         ctx.fillStyle = 'rgba(255,255,255,0.4)'
-        ctx.fillText('ENTER o clic para reiniciar', CW / 2, CH / 2 + 52)
+        ctx.fillText('ENTER, clic o toca para reiniciar', CW / 2, CH / 2 + 52)
       }
 
       ctx.textAlign = 'left'
@@ -341,11 +341,37 @@ export default function BrickBreaker({ gameId }: GameProps) {
     const onMouseLeave = () => { mouseX = -1 }
     const onClick = () => { if (phase !== 'playing') startGame() }
 
+    // ── Touch events ──────────────────────────────────────────────────────────
+    function touchCanvasX(touch: Touch): number {
+      const rect = canvas.getBoundingClientRect()
+      return (touch.clientX - rect.left) * (CW / rect.width)
+    }
+
+    const onTouchStart = (e: TouchEvent) => {
+      e.preventDefault() // prevent scroll & 300 ms click delay
+      const x = touchCanvasX(e.touches[0])
+      mouseX = x
+      if (phase !== 'playing') startGame()
+    }
+
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault()
+      mouseX = touchCanvasX(e.touches[0])
+    }
+
+    const onTouchEnd = () => {
+      mouseX = -1
+    }
+
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
     canvas.addEventListener('mousemove', onMouseMove)
     canvas.addEventListener('mouseleave', onMouseLeave)
     canvas.addEventListener('click', onClick)
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false })
+    canvas.addEventListener('touchmove',  onTouchMove,  { passive: false })
+    canvas.addEventListener('touchend',   onTouchEnd)
+    canvas.addEventListener('touchcancel', onTouchEnd)
 
     // First render (idle screen)
     makeBricks()
@@ -358,6 +384,10 @@ export default function BrickBreaker({ gameId }: GameProps) {
       canvas.removeEventListener('mousemove', onMouseMove)
       canvas.removeEventListener('mouseleave', onMouseLeave)
       canvas.removeEventListener('click', onClick)
+      canvas.removeEventListener('touchstart', onTouchStart)
+      canvas.removeEventListener('touchmove',  onTouchMove)
+      canvas.removeEventListener('touchend',   onTouchEnd)
+      canvas.removeEventListener('touchcancel', onTouchEnd)
     }
   }, [gameId])
 
@@ -367,6 +397,7 @@ export default function BrickBreaker({ gameId }: GameProps) {
       width={CW}
       height={CH}
       className="w-full h-full block cursor-none"
+      style={{ touchAction: 'none' }}
     />
   )
 }
