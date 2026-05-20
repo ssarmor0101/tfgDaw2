@@ -19,6 +19,11 @@ class LogroService
         return LogroDto::collection($this->logroRepository->all());
     }
 
+    public function getLogrosByJuegoId(int $juegoId): Collection
+    {
+        return LogroDto::collection($this->logroRepository->allByJuego($juegoId));
+    }
+
     public function getLogroById(int $id): ?LogroDto
     {
         $logro = $this->logroRepository->find($id);

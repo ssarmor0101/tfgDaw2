@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { Juego, ApiState } from '../types'
+import { friendlyError, httpErrorMessage } from '../utils/friendlyError'
 
 export function useGames(url: string) {
   const [state, setState] = useState<ApiState<Juego[]>>({
@@ -15,7 +16,7 @@ export function useGames(url: string) {
       setState({ data: null, loading: true, error: null })
       try {
         const res = await fetch(url, { headers: { Accept: 'application/json' } })
-        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`)
+        if (!res.ok) throw new Error(httpErrorMessage(res.status))
         const json = (await res.json()) as { data: Juego[] }
         if (!cancelled) setState({ data: json.data, loading: false, error: null })
       } catch (err) {
@@ -23,7 +24,7 @@ export function useGames(url: string) {
           setState({
             data: null,
             loading: false,
-            error: err instanceof Error ? err.message : 'Error desconocido',
+            error: friendlyError(err),
           })
         }
       }

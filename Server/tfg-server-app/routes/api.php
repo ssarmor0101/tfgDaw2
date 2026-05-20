@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AmigoController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\JuegoController;
 use App\Http\Controllers\Api\LogroController;
 use App\Http\Controllers\Api\PuntuacionController;
@@ -26,6 +27,7 @@ Route::name('api.')->group(function () {
     Route::get('/juegos/{juego}', [JuegoController::class, 'show'])->name('juegos.show');
 
     Route::get('/logros', [LogroController::class, 'index'])->name('logros.index');
+    Route::get('/logros/juego/{juego}', [LogroController::class, 'getLogrosByJuegoId'])->name('logros.juego');
     Route::get('/logros/{logro}', [LogroController::class, 'show'])->name('logros.show');
 
     Route::get('/puntuaciones', [PuntuacionController::class, 'index'])->name('puntuaciones.index');
@@ -71,6 +73,9 @@ Route::name('api.')->group(function () {
         |--------------------------------------------------------------------------
         */
         Route::middleware('rol:admin')->group(function () {
+            // Dashboard
+            Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
             // Usuarios
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
             Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -88,12 +93,12 @@ Route::name('api.')->group(function () {
             Route::match(['put', 'patch'], '/logros/{logro}', [LogroController::class, 'update'])->name('logros.update');
             Route::delete('/logros/{logro}', [LogroController::class, 'destroy'])->name('logros.destroy');
 
-            // Amigos (Gestión administrativa)
-            Route::get('/amigos', [AmigoController::class, 'index'])->name('amigos.index');
-            Route::post('/amigos', [AmigoController::class, 'store'])->name('amigos.store');
-            Route::get('/amigos/{amigo}', [AmigoController::class, 'show'])->name('amigos.show');
-            Route::match(['put', 'patch'], '/amigos/{amigo}', [AmigoController::class, 'update'])->name('amigos.update');
-            Route::delete('/amigos/{amigo}', [AmigoController::class, 'destroy'])->name('amigos.destroy');
+            // Amigos (Gestión administrativa) — prefijo /admin/amigos para evitar conflicto con rutas de usuario
+            Route::get('/admin/amigos', [AmigoController::class, 'index'])->name('amigos.index');
+            Route::post('/admin/amigos', [AmigoController::class, 'store'])->name('amigos.store');
+            Route::get('/admin/amigos/{amigo}', [AmigoController::class, 'show'])->name('amigos.show');
+            Route::match(['put', 'patch'], '/admin/amigos/{amigo}', [AmigoController::class, 'update'])->name('amigos.update');
+            Route::delete('/admin/amigos/{amigo}', [AmigoController::class, 'destroy'])->name('amigos.destroy');
 
             // Puntuaciones (Gestión administrativa)
             Route::get('/puntuaciones/user/{user?}', [PuntuacionController::class, 'getPuntuacionesByUserId'])->name('puntuaciones.user');

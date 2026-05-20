@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../../../context/AuthContext'
+import { friendlyError, httpErrorMessage } from '../../../utils/friendlyError'
 
 interface UseCrudOptions {
   listUrl: string
@@ -36,11 +37,16 @@ export function useCrud<T>(options: UseCrudOptions) {
   const fetchAll = useCallback(async () => {
     setInternal({ all: [], loading: true, error: null })
     try {
-      const res = await fetch(listUrl, {
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
-      })
+      let res: Response
+      try {
+        res = await fetch(listUrl, {
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+        })
+      } catch (networkErr) {
+        throw new Error(friendlyError(networkErr))
+      }
       const json = await res.json()
-      if (!res.ok) throw new Error(json.status?.message ?? 'Error al cargar datos')
+      if (!res.ok) throw new Error(json.status?.message ?? httpErrorMessage(res.status))
 
       // Normalise: {data: [...]} or {data: {data: [...]}}
       const envelope = json.data
@@ -52,7 +58,7 @@ export function useCrud<T>(options: UseCrudOptions) {
       }
       setInternal({ all, loading: false, error: null })
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Error desconocido'
+      const msg = friendlyError(err)
       setInternal({ all: [], loading: false, error: msg })
     }
   }, [listUrl, token])
@@ -94,19 +100,24 @@ export async function apiCall(
   token: string | null,
   body?: unknown,
 ): Promise<{ ok: boolean; data: unknown; message: string }> {
-  const res = await fetch(url, {
-    method,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  })
+  let res: Response
+  try {
+    res = await fetch(url, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    })
+  } catch (networkErr) {
+    return { ok: false, data: null, message: friendlyError(networkErr) }
+  }
   const json = await res.json().catch(() => ({}))
   const message =
     json.status?.message ??
     (json.errors ? Object.values(json.errors as Record<string, string[]>)[0]?.[0] : undefined) ??
-    (res.ok ? 'OK' : 'Error')
+    (res.ok ? 'OK' : httpErrorMessage(res.status))
   return { ok: res.ok, data: json.data ?? json, message }
 }

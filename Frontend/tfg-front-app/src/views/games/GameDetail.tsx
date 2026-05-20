@@ -316,8 +316,8 @@ export function GameDetail() {
             <div className="flex flex-col gap-2">
 
               {/* Logros button */}
-              <button
-                type="button"
+              <Link
+                to={`/juegos/${gameId}/logros`}
                 className="w-full flex items-center gap-3 px-4 py-3 bg-arcade-card rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors border border-arcade-border/50 group"
               >
                 <svg className="w-4 h-4 text-yellow-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -328,12 +328,12 @@ export function GameDetail() {
                 <svg className="w-4 h-4 text-arcade-muted group-hover:text-white transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>
-              </button>
+              </Link>
 
               {/* My scores button */}
               {user ? (
-                <button
-                  type="button"
+                <Link
+                  to={`/juegos/${gameId}/mis-puntuaciones`}
                   className="w-full flex items-center gap-3 px-4 py-3 bg-arcade-card rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors border border-arcade-border/50 group"
                 >
                   <svg className="w-4 h-4 text-arcade-cyan shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -344,7 +344,7 @@ export function GameDetail() {
                   <svg className="w-4 h-4 text-arcade-muted group-hover:text-white transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                   </svg>
-                </button>
+                </Link>
               ) : (
                 <div className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-arcade-muted/50 border border-arcade-border/20 cursor-not-allowed select-none">
                   <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">

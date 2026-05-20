@@ -13,7 +13,8 @@ class UserDto extends Dto
         public ?string $email = null,
         public ?int $rol_id = null,
         public ?string $password = null,
-        public ?array $rol = null
+        public ?array $rol = null,
+        public ?string $created_at = null,
     ) {
     }
 
@@ -27,6 +28,7 @@ class UserDto extends Dto
             rol_id: $item->rol_id,
             password: $item->password,
             rol: $item->rol?->toArray(),
+            created_at: $item->created_at?->toISOString(),
         );
     }
 
@@ -39,6 +41,7 @@ class UserDto extends Dto
             rol_id: $data['rol_id'] ?? null,
             password: $data['password'] ?? null,
             rol: $data['rol'] ?? null,
+            created_at: $data['created_at'] ?? null,
         );
     }
 
@@ -51,6 +54,7 @@ class UserDto extends Dto
             'rol_id' => $this->rol_id,
             'password' => $this->password,
             'rol' => $this->rol,
+            'created_at' => $this->created_at,
         ];
     }
 }

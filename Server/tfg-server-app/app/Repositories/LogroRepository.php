@@ -13,6 +13,11 @@ class LogroRepository
         return Logro::all();
     }
 
+    public function allByJuego(int $juegoId): Collection
+    {
+        return Logro::where('juego_id', $juegoId)->get();
+    }
+
     public function find(int $id): ?Logro
     {
         return Logro::find($id);

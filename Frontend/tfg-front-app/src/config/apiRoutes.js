@@ -9,10 +9,20 @@ export const API_ROUTES = {
     SEARCH: `${API_URL}/juegos/buscar`,
   },
 
+  LOGROS: {
+    BY_GAME: (gameId) => `${API_URL}/logros/juego/${gameId}`,
+  },
+
+  RESULTADOS: {
+    MY_BY_GAME: (gameId) => `${API_URL}/resultados/juego/${gameId}`,
+    BY_USER_AND_GAME: (userId, gameId) => `${API_URL}/resultados/user/${userId}/juego/${gameId}`,
+  },
+
   SCORES: {
     ALL: `${API_URL}/puntuaciones`,
     BY_GAME: (gameId) => `${API_URL}/puntuaciones/juego/${gameId}`,
     MY_BY_GAME: (gameId) => `${API_URL}/puntuaciones/me/juego/${gameId}`,
+    BY_USER_AND_GAME: (userId, gameId) => `${API_URL}/puntuaciones/user/${userId}/juego/${gameId}`,
   },
 
   AUTH: {
@@ -37,6 +47,7 @@ export const API_ROUTES = {
   },
 
   ADMIN: {
+    DASHBOARD: `${API_URL}/admin/dashboard`,
     USERS: {
       LIST: `${API_URL}/users`,
       DETAIL: (id) => `${API_URL}/users/${id}`,
@@ -57,11 +68,11 @@ export const API_ROUTES = {
       DELETE: (id) => `${API_URL}/logros/${id}`,
     },
     AMIGOS: {
-      LIST: `${API_URL}/amigos`,
-      DETAIL: (id) => `${API_URL}/amigos/${id}`,
-      CREATE: `${API_URL}/amigos`,
-      UPDATE: (id) => `${API_URL}/amigos/${id}`,
-      DELETE: (id) => `${API_URL}/amigos/${id}`,
+      LIST: `${API_URL}/admin/amigos`,
+      DETAIL: (id) => `${API_URL}/admin/amigos/${id}`,
+      CREATE: `${API_URL}/admin/amigos`,
+      UPDATE: (id) => `${API_URL}/admin/amigos/${id}`,
+      DELETE: (id) => `${API_URL}/admin/amigos/${id}`,
     },
     PUNTUACIONES: {
       DETAIL: (id) => `${API_URL}/puntuaciones/${id}`,

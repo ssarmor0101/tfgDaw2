@@ -2,8 +2,11 @@ import { useState, useEffect, useMemo } from 'react'
 import ReactPaginateLib from 'react-paginate'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReactPaginate = ((ReactPaginateLib as any).default ?? ReactPaginateLib) as typeof ReactPaginateLib
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { API_ROUTES } from '../../config/apiRoutes.js'
+import { ErrorMessage } from '../../components/ui/ErrorMessage'
+import { friendlyError } from '../../utils/friendlyError'
 import type { FriendEntry } from '../../types'
 
 const PAGE_SIZE = 8
@@ -57,7 +60,7 @@ function useFriendList(token: string | null) {
         if (!res.ok) throw new Error(extractMsg(json as BackendResponse, `Error ${res.status}`))
         setFriends(json.data ?? [])
       })
-      .catch(err => setError((err as Error).message))
+      .catch(err => setError(friendlyError(err)))
       .finally(() => setLoading(false))
   }
 
@@ -274,6 +277,8 @@ interface FriendCardProps {
 
 function FriendCard({ entry, myId, token, onRemoved }: FriendCardProps) {
   const other = getOtherUser(entry, myId)
+  const navigate = useNavigate()
+
   const [removing, setRemoving] = useState(false)
   const [confirmRemove, setConfirmRemove] = useState(false)
 
@@ -304,9 +309,11 @@ function FriendCard({ entry, myId, token, onRemoved }: FriendCardProps) {
 
       {/* Actions */}
       <div className="flex flex-col gap-2">
-        {/* Scores */}
+
+        {/* Ver puntuaciones */}
         <button
           type="button"
+          onClick={() => navigate(`/jugadores/${other.id}/puntuaciones`, { state: { friendName: other.name } })}
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-arcade-card border border-arcade-border/50 text-xs text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
         >
           <svg className="w-3.5 h-3.5 text-arcade-cyan shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -314,18 +321,6 @@ function FriendCard({ entry, myId, token, onRemoved }: FriendCardProps) {
               d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
           </svg>
           Ver puntuaciones
-        </button>
-
-        {/* Logros */}
-        <button
-          type="button"
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-arcade-card border border-arcade-border/50 text-xs text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-        >
-          <svg className="w-3.5 h-3.5 text-yellow-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-              d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0" />
-          </svg>
-          Ver logros
         </button>
 
         {/* Remove */}
@@ -460,9 +455,7 @@ export function Friends() {
       )}
 
       {!friendsLoading && friendsError && (
-        <div className="flex flex-col items-center gap-3 py-20 text-center">
-          <p className="text-red-400 text-sm">{friendsError}</p>
-        </div>
+        <ErrorMessage message={friendsError} onRetry={reloadFriends} />
       )}
 
       {!friendsLoading && !friendsError && friends.length === 0 && (

@@ -12,8 +12,8 @@ interface UserRow extends User {
 }
 
 const ROLES = [
-  { id: 1, label: 'Usuario' },
-  { id: 2, label: 'Admin' },
+  { id: 1, label: 'Administrador' },
+  { id: 2, label: 'Usuario' },
 ]
 
 const COLUMNS: Column<UserRow>[] = [
@@ -23,7 +23,7 @@ const COLUMNS: Column<UserRow>[] = [
   {
     header: 'Rol',
     key: 'rol_id',
-    render: (row) => row.rol?.name ?? (row.rol_id === 2 ? 'Admin' : 'Usuario'),
+    render: (row) => row.rol?.name ?? (row.rol_id === 1 ? 'Administrador' : 'Usuario'),
   },
 ]
 

@@ -2,12 +2,13 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 const NAV_ITEMS = [
-  { to: '/admin/usuarios', label: 'Usuarios' },
-  { to: '/admin/juegos', label: 'Juegos' },
-  { to: '/admin/logros', label: 'Logros' },
-  { to: '/admin/amigos', label: 'Amigos' },
-  { to: '/admin/puntuaciones', label: 'Puntuaciones' },
-  { to: '/admin/resultados', label: 'Resultados' },
+  { to: '/admin', label: 'Dashboard', end: true },
+  { to: '/admin/usuarios', label: 'Usuarios', end: false },
+  { to: '/admin/juegos', label: 'Juegos', end: false },
+  { to: '/admin/logros', label: 'Logros', end: false },
+  { to: '/admin/amigos', label: 'Amigos', end: false },
+  { to: '/admin/puntuaciones', label: 'Puntuaciones', end: false },
+  { to: '/admin/resultados', label: 'Resultados', end: false },
 ]
 
 export function AdminLayout() {
@@ -29,10 +30,11 @@ export function AdminLayout() {
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-1">
-          {NAV_ITEMS.map(({ to, label }) => (
+          {NAV_ITEMS.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
+              end={end}
               className={({ isActive }) =>
                 `block px-3 py-2 rounded text-sm font-medium transition-colors ${
                   isActive

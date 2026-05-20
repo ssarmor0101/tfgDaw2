@@ -7,6 +7,7 @@ use App\Http\Requests\StoreLogroRequest;
 use App\Http\Requests\UpdateLogroRequest;
 use App\Services\LogroService;
 use App\Helpers\JsonResponseBuilderHelper;
+use App\Models\Juego;
 use App\Models\Logro;
 use App\DTOs\Logro\LogroDto;
 use Illuminate\Http\JsonResponse;
@@ -17,6 +18,19 @@ class LogroController extends Controller
     public function __construct(
         private readonly LogroService $logroService
     ) {
+    }
+
+    /**
+     * Display logros filtered by game.
+     */
+    public function getLogrosByJuegoId(Juego $juego): JsonResponse
+    {
+        try {
+            $logros = $this->logroService->getLogrosByJuegoId($juego->id);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Logros obtenidos con exito', ['data' => $logros]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
     }
 
     /**

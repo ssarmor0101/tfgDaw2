@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 const NAV_LINKS = [
@@ -10,9 +10,13 @@ const NAV_LINKS = [
 
 export function Header() {
   const { user, logout } = useAuth()
+  const location = useLocation()
+
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  // Close user dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -21,6 +25,18 @@ export function Header() {
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [location.pathname])
+
+  // Close mobile menu on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
   }, [])
 
   return (
@@ -32,7 +48,7 @@ export function Header() {
           ClassicGames
         </Link>
 
-        {/* Nav */}
+        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-1">
           {NAV_LINKS.map(({ to, label }) => (
             <NavLink
@@ -51,8 +67,28 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Auth */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Right side */}
+        <div className="flex items-center gap-2 shrink-0">
+
+          {/* Hamburger — mobile only */}
+          <button
+            onClick={() => setMobileOpen(v => !v)}
+            className="md:hidden w-9 h-9 flex items-center justify-center rounded text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+            aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            )}
+          </button>
+
+          {/* Auth */}
           {user ? (
             <div className="relative" ref={dropdownRef}>
               <button
@@ -121,7 +157,7 @@ export function Header() {
             <>
               <Link
                 to="/registro"
-                className="px-4 py-1.5 text-sm text-gray-300 border border-arcade-border rounded hover:border-arcade-purple hover:text-white transition-colors"
+                className="hidden sm:inline-flex px-4 py-1.5 text-sm text-gray-300 border border-arcade-border rounded hover:border-arcade-purple hover:text-white transition-colors"
               >
                 Registro
               </Link>
@@ -135,6 +171,50 @@ export function Header() {
           )}
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-arcade-border bg-arcade-surface/98">
+          <nav className="max-w-7xl mx-auto px-4 py-3 flex flex-col">
+            {NAV_LINKS.map(({ to, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={to === '/'}
+                onClick={() => setMobileOpen(false)}
+                className={({ isActive }) =>
+                  `flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
+                    isActive
+                      ? 'text-arcade-purple bg-arcade-purple/10'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  }`
+                }
+              >
+                {label}
+              </NavLink>
+            ))}
+            {/* Auth links for anonymous users on mobile */}
+            {!user && (
+              <div className="mt-3 pt-3 border-t border-arcade-border flex gap-2">
+                <Link
+                  to="/registro"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex-1 text-center py-2 text-sm text-gray-300 border border-arcade-border rounded-lg hover:border-arcade-purple hover:text-white transition-colors"
+                >
+                  Registro
+                </Link>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex-1 text-center py-2 text-sm bg-arcade-purple text-white rounded-lg hover:bg-purple-500 transition-colors"
+                >
+                  Iniciar sesión
+                </Link>
+              </div>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
