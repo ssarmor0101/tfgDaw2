@@ -11,8 +11,8 @@ use App\Helpers\JsonResponseBuilderHelper;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Exception;
-use Request;
 
 class UserController extends Controller
 {
@@ -112,10 +112,22 @@ class UserController extends Controller
     public function updateOwnProfile(Request $request): JsonResponse
     {
         try {
+            $validated = $request->validate([
+                'name'     => 'sometimes|string|max:255',
+                'password' => 'sometimes|string|min:8|confirmed',
+            ]);
+
             $user = Auth::user();
-            $userDto = UserDto::fromArray($request->validated());
-            $updated = $this->userService->updateUser($user, $userDto);
+            $userDto = UserDto::fromArray($validated);
+            $this->userService->updateUser($user, $userDto);
+
+            $updated = UserDto::fromModel($user->fresh());
             return JsonResponseBuilderHelper::buildJsonSuccess('Perfil actualizado con exito', ['data' => $updated]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => ['success' => false, 'message' => 'Error de validación'],
+                'errors' => $e->errors(),
+            ], 422);
         } catch (Exception $e) {
             return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
         }

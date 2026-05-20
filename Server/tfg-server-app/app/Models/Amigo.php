@@ -23,7 +23,7 @@ class Amigo extends Model
     protected $fillable = [
         'user_id',
         'friend_id',
-        'is_friend'
+        'receiver_id',
     ];
 
     /**

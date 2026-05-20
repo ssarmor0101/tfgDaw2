@@ -20,6 +20,9 @@ Route::name('api.')->group(function () {
 
     // Rutas de consulta pública (Usuario Común Anónimo)
     Route::get('/juegos', [JuegoController::class, 'index'])->name('juegos.index');
+    Route::get('/juegos/populares', [JuegoController::class, 'popular'])->name('juegos.popular');
+    Route::get('/juegos/recientes', [JuegoController::class, 'recent'])->name('juegos.recent');
+    Route::get('/juegos/buscar', [JuegoController::class, 'buscar'])->name('juegos.buscar');
     Route::get('/juegos/{juego}', [JuegoController::class, 'show'])->name('juegos.show');
 
     Route::get('/logros', [LogroController::class, 'index'])->name('logros.index');
@@ -47,7 +50,7 @@ Route::name('api.')->group(function () {
         Route::delete('/account', [UserController::class, 'eliminateAccount'])->name('users.eliminate');
 
         // Puntuaciones personales y publicación
-        Route::get('/puntuaciones/juego/{juego}', [PuntuacionController::class, 'getPuntuacionesByAuthUserJuegoId'])->name('puntuaciones.juego');
+        Route::get('/puntuaciones/me/juego/{juego}', [PuntuacionController::class, 'getPuntuacionesByAuthUserJuegoId'])->name('puntuaciones.me.juego');
         Route::post('/puntuaciones/juego/{juego}', [PuntuacionController::class, 'publishPuntuacion'])->name('puntuaciones.publish');
 
         // Resultados personales y recepción de logros
@@ -56,9 +59,11 @@ Route::name('api.')->group(function () {
 
         // Amigos (Social)
         Route::get('/amigos', [AmigoController::class, 'getFriendsByAuthUser'])->name('amigos.auth');
-        Route::post('/amigos/request', [AmigoController::class, 'requestFriendshipByAuthUser'])->name('amigos.request');
-        Route::put('/amigos/{amigo}/accept', [AmigoController::class, 'acceptFriendship'])->name('amigos.accept');
-        Route::delete('/amigos/{amigo}/delete', [AmigoController::class, 'deleteFriendship'])->name('amigos.delete');
+        Route::get('/amigos/solicitudes', [AmigoController::class, 'getPendingRequests'])->name('amigos.solicitudes');
+        Route::post('/amigos/solicitud', [AmigoController::class, 'requestFriendshipByAuthUser'])->name('amigos.request');
+        Route::put('/amigos/{amigo}/aceptar', [AmigoController::class, 'acceptFriendship'])->name('amigos.accept');
+        Route::delete('/amigos/{amigo}/rechazar', [AmigoController::class, 'rejectFriendship'])->name('amigos.reject');
+        Route::delete('/amigos/{amigo}', [AmigoController::class, 'deleteFriendship'])->name('amigos.delete');
 
         /*
         |--------------------------------------------------------------------------

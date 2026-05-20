@@ -33,6 +33,50 @@ class JuegoController extends Controller
     }
 
     /**
+     * Juegos más populares (ordenados por número de puntuaciones).
+     */
+    public function popular(): JsonResponse
+    {
+        try {
+            $juegos = $this->juegoService->getPopularJuegos();
+            return JsonResponseBuilderHelper::buildJsonSuccess('Juegos populares recuperados correctamente', ['data' => $juegos]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Juegos más recientes (ordenados por fecha de creación).
+     */
+    public function recent(): JsonResponse
+    {
+        try {
+            $juegos = $this->juegoService->getRecentJuegos();
+            return JsonResponseBuilderHelper::buildJsonSuccess('Juegos recientes recuperados correctamente', ['data' => $juegos]);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Búsqueda paginada de juegos con filtro por nombre y orden configurable.
+     */
+    public function buscar(\Illuminate\Http\Request $request): JsonResponse
+    {
+        try {
+            $query   = $request->query('q', '');
+            $order   = $request->query('order', 'popular_desc');
+            $page    = (int) $request->query('page', 1);
+            $perPage = (int) $request->query('per_page', 12);
+
+            $result = $this->juegoService->searchJuegos($query, $order, $page, $perPage);
+            return JsonResponseBuilderHelper::buildJsonSuccess('Juegos recuperados correctamente', $result);
+        } catch (Exception $e) {
+            return JsonResponseBuilderHelper::buildJsonError($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreJuegoRequest $request): JsonResponse

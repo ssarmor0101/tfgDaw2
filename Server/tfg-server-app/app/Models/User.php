@@ -81,9 +81,8 @@ class User extends Authenticatable
 
     public function isFriend(UserDto $user): bool
     {
-        $currentUser = $this;
-        $currentUserDto = UserDto::fromModel($currentUser);
+        $currentUserDto = UserDto::fromModel($this);
         $friend = (new AmigoRepository)->findByPair($currentUserDto, $user);
-        return $friend != null && $friend->is_friend;
+        return $friend !== null && $friend->receiver_id === null;
     }
 }

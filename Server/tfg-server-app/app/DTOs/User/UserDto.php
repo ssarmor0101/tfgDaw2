@@ -37,6 +37,7 @@ class UserDto extends Dto
             name: $data['name'] ?? null,
             email: $data['email'] ?? null,
             rol_id: $data['rol_id'] ?? null,
+            password: $data['password'] ?? null,
             rol: $data['rol'] ?? null,
         );
     }
@@ -48,6 +49,7 @@ class UserDto extends Dto
             'name' => $this->name,
             'email' => $this->email,
             'rol_id' => $this->rol_id,
+            'password' => $this->password,
             'rol' => $this->rol,
         ];
     }
