@@ -13,6 +13,9 @@ class JuegoSeeder extends Seeder
      */
     public function run(): void
     {
-        Juego::factory()->count(5)->create();
+        Juego::firstOrCreate([
+            'nombre' => 'Brick Breaker',
+            'descripcion' => 'Un clásico juego de romper ladrillos',
+        ]);
     }
 }

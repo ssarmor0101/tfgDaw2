@@ -17,13 +17,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            JuegoSeeder::class
         ]);
 
         if (app()->environment('local')) {
             // Sólo se ejecutan estos seeders en el entorno local (desarrollo)
             $this->call([
-                JuegoSeeder::class,
                 LogroSeeder::class,
                 ResultadoSeeder::class,
                 PuntuacionSeeder::class,
