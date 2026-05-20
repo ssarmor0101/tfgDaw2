@@ -32,6 +32,7 @@
 | **Prototipado de alta fidelidad (Figma)** | [Ver en Figma](https://www.figma.com/design/eZSOtx0nape547XsrcyTN5/TFG-DAW-2?node-id=0-1&t=UHWYyBZbmt8j8V9C-1) |
 | **Esquema entidad-relación** | [Wiki — Entidad-Relación](https://github.com/ssarmor0101/tfgDaw2/wiki/EntidadRelacion) |
 | **Repositorio** | [github.com/ssarmor0101/tfgDaw2](https://github.com/ssarmor0101/tfgDaw2) |
+| **Vídeo del proyecto** | [Ver](https://youtu.be/BL265je3uDE) |
 
 ---
 
@@ -119,9 +120,9 @@ La API estará disponible en `http://localhost:8000/api`.
 
 ---
 
-## 🎬 Vídeo-manual
+## 🎬 Vídeo
 
-> ⚠️ **En proceso** — El vídeo-manual de uso de la aplicación se publicará próximamente.
+[Video](https://youtu.be/BL265je3uDE)
 
 ---
 
