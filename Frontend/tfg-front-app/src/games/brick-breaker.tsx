@@ -343,7 +343,7 @@ export default function BrickBreaker({ gameId }: GameProps) {
 
     // ── Touch events ──────────────────────────────────────────────────────────
     function touchCanvasX(touch: Touch): number {
-      const rect = canvas.getBoundingClientRect()
+      const rect = canvas!.getBoundingClientRect()
       return (touch.clientX - rect.left) * (CW / rect.width)
     }
 
