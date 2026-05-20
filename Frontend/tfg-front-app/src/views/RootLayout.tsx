@@ -2,9 +2,9 @@ import { Outlet } from 'react-router-dom'
 import { Header } from '../components/header/Header'
 
 const FOOTER_LINKS = [
-  { href: '/privacidad', label: 'Privacidad' },
-  { href: '/terminos', label: 'Términos' },
-  { href: '/soporte', label: 'Soporte' },
+  { href: '/#', label: 'Privacidad' },
+  { href: '/#', label: 'Términos' },
+  { href: '/#', label: 'Soporte' },
 ]
 
 export function RootLayout() {
