@@ -25,7 +25,7 @@ class AmigoSeeder extends Seeder
                 $pares[] = [
                     'user_id' => $users[$i],
                     'friend_id' => $users[$j],
-                    'is_friend' => true,
+                    'receiver_id' => null,
                     'created_at' => now(),
                     'updated_at' => now()
                 ];
